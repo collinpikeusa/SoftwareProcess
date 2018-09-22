@@ -9,7 +9,9 @@ def dispatch(parm={}):
     return httpResponse
 
 
-# ------------------- Inner Funtions ---------------------
+# ------------------- Inner Functions ---------------------
 def createCube(parm):
-    cube = ['green']
+    cube = ['green', 'green', 'green'
+            'green', 'green', 'green'
+            'green', 'green', 'green']
     return cube
