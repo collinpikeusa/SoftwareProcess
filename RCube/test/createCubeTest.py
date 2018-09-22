@@ -54,7 +54,48 @@ class CreateCubeTest(unittest.TestCase):
 #            'orange', 'orange', 'orange', 'orange', 'orange', 'orange']}
 #    test 030
 #    input:  parm: {'op': 'create', 'r': 'r', 'l': 'l', 't': 't', 'u': 'u', 'f': 'f', 'b': 'b'}
-#    output
+#    output: '{'status': 'created', 'cube': [
+#                'f',  'f',  'f',
+#                'f',  'f',  'f',
+#                'f',  'f',  'f',
+#                'r', 'r', 'r',
+#                'r', 'r', 'r',
+#                'r', 'r', 'r', 
+#                'b', 'b', 'b',
+#                'b', 'b', 'b',
+#                'b', 'b', 'b', 
+#                'l', 'l', 'l',
+#                'l', 'l', 'l',
+#                'l', 'l', 'l', 
+#                't', 't', 't',
+#                't', 't', 't', 
+#                't', 't', 't',
+#                'u', 'u', 'u',
+#                'u', 'u', 'u',
+#                'u', 'u', 'u',]}
+#
+#    test 040
+#    input:    parm: {'op': 'create', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 't': '1'}
+#    output:   {'status': 'created', 'cube': [
+#                    'f',  'f',  'f',
+#                    'f',  'f',  'f',
+#                    'f',  'f',  'f',
+#                    'r', 'r', 'r',
+#                    'r', 'r', 'r',
+#                    'r', 'r', 'r',
+#                    'b', 'b', 'b',
+#                    'b', 'b', 'b',
+#                    'b', 'b', 'b',
+#                    'l', 'l', 'l',
+#                    'l', 'l', 'l',
+#                    'l', 'l', 'l',
+#                    '1', '1', '1',
+#                    '1', '1', '1',
+#                    '1', '1', '1',
+#                    'orange', 'orange', 'orange',
+#                    'orange', 'orange', 'orange',
+#                    'orange', 'orange', 'orange']}
+
 
     def test100_010_ShouldCreateEntireDefaultCube(self):
         parm = {'op': 'create'}
@@ -85,3 +126,14 @@ class CreateCubeTest(unittest.TestCase):
             for _ in range(0,9):
                 self.assertEqual(face, actualResult[elementIndex])
                 elementIndex += 1
+
+    def test100_040_ShouldCreateCubeWithAllDifferentSidesButOneAndANumber(self):
+        parm = {'op': 'create', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 't': '1'}
+        expectedFaces = ['f', 'r', 'b', 'l', '1', 'orange']
+        actualResult = RCube.createCube(parm)
+        elementIndex = 0
+        for face in expectedFaces:
+            for _ in range(0,9):
+                self.assertEqual(face, actualResult[elementIndex])
+                elementIndex += 1
+
