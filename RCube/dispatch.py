@@ -30,3 +30,7 @@ def createCube(parm):
             'orange', 'orange', 'orange',
             'orange', 'orange', 'orange']
     return cube
+
+def createSide(parm):
+    side = []
+    return side
