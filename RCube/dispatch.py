@@ -2,9 +2,19 @@
 def dispatch(parm={}):
     httpResponse = {}
     if(not('op' in parm)):
-        httpResponse['status'] = 'error: missing op'
+        httpResponse['status'] = 'error: missing op'                
     elif(parm['op'] == 'create'):
-        httpResponse['status'] = 'created'
+        duplicate = 0
+        for i in parm.values():
+            for j in parm.values():
+                if(i == j):
+                    duplicate += 1
+            if(duplicate > 1):
+                break
+        if(duplicate > 1):
+            httpResponse['status'] = 'error: at least two faces have the same color'
+        else:  
+            httpResponse['status'] = 'created'
         httpResponse['cube'] = createCube(parm)
     return httpResponse
 
