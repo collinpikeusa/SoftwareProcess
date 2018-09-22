@@ -58,13 +58,16 @@ class DispatchTest(unittest.TestCase):
 # outputs:    A JSON string containing, at a minimum, a key of "status"
 #
 # Happy path 
+#    test 010
 #      input:   parm having at least one element with a key of "op"        
-#      output:  JSON string containing a key of "status" 
-#
+#      output:  JSON string containing a key of "status"
+#      
 # Sad path 
+#    test 910
 #      input:   no string       
 #      output:  dictionary consisting of an element with a key of "status" and value of "error: missing op"
 #
+#    test 920
 #      input:   valid parm string with at least one key-value pair, no key of "op"
 #      output:  dictionary consisting of an element with a key of "status" and value of "error: missing op"
 #
@@ -95,5 +98,50 @@ class DispatchTest(unittest.TestCase):
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
+    
+# Acceptance Test
+# 200 Dispatch -op=create
+# Confidence Level: BVA
+# Analysis
+#      inputs:     http://url/rcube?op=create<options>
+#                        where options can be zero or one of the following:
+#                            f=<string>    String of length GT 0. Optional. Default to "green". Unvalidated
+#                            r=<string>    String of length GT 0. Optional. Default to "yellow". Unvalidated        
+#                            b=<string>    String of length GT 0. Optional. Default to "blue". Unvalidated        
+#                            l=<string>    String of length GT 0. Optional. Default to "white". Unvalidated        
+#                            t=<string>    String of length GT 0. Optional. Default to "red". Unvalidated        
+#                            u=<string>    String of length GT 0. Optional. Default to "orange". Unvalidated   
+#      outputs:     A JSON string containing, at a minimum, a key of "status"
+#
+# Happy path:
+#    input:     zero options
+#        http://url/rcube?op=create
+#    output:    default model cube, which is a JSON string:
+#        {'status': 'created', 'cube': [
+#            'green', 'green', 'green',
+#            'green', 'green', 'green',
+#            'green', 'green', 'green', 
+#            'yellow', 'yellow', 'yellow',
+#            'yellow', 'yellow', 'yellow',
+#            'yellow', 'yellow', 'yellow',
+#            'blue', 'blue', 'blue',
+#            'blue', 'blue', 'blue',
+#            'blue', 'blue', 'blue',
+#            'white', 'white', 'white',
+#            'white', 'white', 'white',
+#            'white', 'white', 'white',
+#            'red', 'red', 'red',
+#            'red','red', 'red',
+#            'red', 'red', 'red',
+#            'orange', 'orange', 'orange',
+#            'orange', 'orange', 'orange', 'orange', 'orange', 'orange']}        
+
+    def test200_010_ShouldCreateDefaultCubeStatus(self):
+        queryString="op=create"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('created', resultDict['status'][0:7])
+        
 
     
