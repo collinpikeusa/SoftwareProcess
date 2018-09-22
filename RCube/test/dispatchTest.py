@@ -135,6 +135,30 @@ class DispatchTest(unittest.TestCase):
 #            'red', 'red', 'red',
 #            'orange', 'orange', 'orange',
 #            'orange', 'orange', 'orange',
+#            'orange', 'orange', 'orange']}   
+#
+#    test 030
+#    input:     One Option
+#        http://url/rcube?op=create&f=purple
+#    output:    default model cube, which is a JSON string:
+#        {'status': 'created', 'cube': [
+#            'purple', 'purple', 'purple',
+#            'purple', 'purple', 'purple',
+#            'purple', 'purple', 'purple', 
+#            'yellow', 'yellow', 'yellow',
+#            'yellow', 'yellow', 'yellow',
+#            'yellow', 'yellow', 'yellow',
+#            'blue', 'blue', 'blue',
+#            'blue', 'blue', 'blue',
+#            'blue', 'blue', 'blue',
+#            'white', 'white', 'white',
+#            'white', 'white', 'white',
+#            'white', 'white', 'white',
+#            'red', 'red', 'red',
+#            'red','red', 'red',
+#            'red', 'red', 'red',
+#            'orange', 'orange', 'orange',
+#            'orange', 'orange', 'orange',
 #            'orange', 'orange', 'orange']}        
 
     def test200_010_ShouldCreateDefaultCubeStatus(self):
@@ -146,6 +170,12 @@ class DispatchTest(unittest.TestCase):
     
     def test200_020_ShouldCreateDefaultCubeKey(self):
         queryString="op=create"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('cube', resultDict)
+        
+    def test200_030_ShouldCreateCubeWithOneDifferentSide(self):
+        queryString="op=create&f=purple"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('cube', resultDict)
