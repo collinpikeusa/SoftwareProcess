@@ -11,24 +11,10 @@ def dispatch(parm={}):
 
 # ------------------- Inner Functions ---------------------
 def createCube(parm):
-    cube = ['green', 'green', 'green',
-            'green', 'green', 'green',
-            'green', 'green', 'green', 
-            'yellow', 'yellow', 'yellow',
-            'yellow', 'yellow', 'yellow',
-            'yellow', 'yellow', 'yellow',
-            'blue', 'blue', 'blue',
-            'blue', 'blue', 'blue',
-            'blue', 'blue', 'blue',
-            'white', 'white', 'white',
-            'white', 'white', 'white',
-            'white', 'white', 'white',
-            'red', 'red', 'red',
-            'red','red', 'red',
-            'red', 'red', 'red',
-            'orange', 'orange', 'orange',
-            'orange', 'orange', 'orange',
-            'orange', 'orange', 'orange']
+    cube = []
+    expectedFaces = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
+    for face in expectedFaces:
+        cube.extend(createSide(face))
     return cube
 
 def createSide(parm):
