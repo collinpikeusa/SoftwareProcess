@@ -95,6 +95,28 @@ class CreateCubeTest(unittest.TestCase):
 #                    'orange', 'orange', 'orange',
 #                    'orange', 'orange', 'orange',
 #                    'orange', 'orange', 'orange']}
+#
+#    test 050
+#    input:    parm: {'op': 'create', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 'under': '42'}
+#    output:   {'status': 'created', 'cube': [
+#                    'f',  'f',  'f',
+#                    'f',  'f',  'f',
+#                    'f',  'f',  'f',
+#                    'r', 'r', 'r',
+#                    'r', 'r', 'r',
+#                    'r', 'r', 'r',
+#                    'b', 'b', 'b',
+#                    'b', 'b', 'b',
+#                    'b', 'b', 'b',
+#                    'l', 'l', 'l',
+#                    'l', 'l', 'l',
+#                    'l', 'l', 'l',
+#                    '1', '1', '1',
+#                    '1', '1', '1',
+#                    '1', '1', '1',
+#                    'orange', 'orange', 'orange',
+#                    'orange', 'orange', 'orange',
+#                    'orange', 'orange', 'orange']}
 
 
     def test100_010_ShouldCreateEntireDefaultCube(self):
@@ -136,4 +158,13 @@ class CreateCubeTest(unittest.TestCase):
             for _ in range(0,9):
                 self.assertEqual(face, actualResult[elementIndex])
                 elementIndex += 1
-
+    
+    def test100_050_ShouldCreateCubeWithAllDifferentSidesButOneAndANumberAndInvalidSyntax(self):
+        parm = {'op': 'create', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 'under': '42'}
+        expectedFaces = ['f', 'r', 'b', 'l', '1', 'orange']
+        actualResult = RCube.createCube(parm)
+        elementIndex = 0
+        for face in expectedFaces:
+            for _ in range(0,9):
+                self.assertEqual(face, actualResult[elementIndex])
+                elementIndex += 1
