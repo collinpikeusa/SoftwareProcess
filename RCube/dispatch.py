@@ -12,9 +12,11 @@ def dispatch(parm={}):
 # ------------------- Inner Functions ---------------------
 def createCube(parm):
     cube = []
-    if(parm['f']):
-        
-    expectedFaces = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
+    colors = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
+    if('f' in parm):
+        color[0] = parm['f']
+    
+    cube.extend(createSide(''))
     for face in expectedFaces:
         cube.extend(createSide(face))
     return cube
