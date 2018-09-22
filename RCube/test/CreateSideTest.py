@@ -15,8 +15,3 @@ class CreateSideTest(unittest.TestCase):
         actualResult = RCube.createSide('green')
         for elementIndex in range(0,9):
             self.assertEqual(expectedResult, actualResult[elementIndex])
-
-
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.test100_010_CreateSide']
-    unittest.main()
