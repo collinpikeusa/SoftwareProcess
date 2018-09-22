@@ -33,4 +33,6 @@ def createCube(parm):
 
 def createSide(parm):
     side = []
+    for i in range(0, 9):
+        side.append(parm)
     return side
