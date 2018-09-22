@@ -65,7 +65,7 @@ class CreateCubeTest(unittest.TestCase):
     
     def test100_010_ShouldCreateCubeWithOneDifferentSide(self):
         parm = {'op': 'create', 'f': 'purple'}
-        expectedFaces = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
+        expectedFaces = ['purple', 'yellow', 'blue', 'white', 'red', 'orange']
         actualResult = RCube.createCube(parm)
         elementIndex = 0
         for face in expectedFaces:
