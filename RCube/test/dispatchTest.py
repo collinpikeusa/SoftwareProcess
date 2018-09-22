@@ -137,6 +137,10 @@ class DispatchTest(unittest.TestCase):
 #            'orange', 'orange', 'orange',
 #            'orange', 'orange', 'orange']}   
 #
+# Sad Path
+#    test 910
+#        input: http://url/rcube?op=create&f=red&u=red
+#        output: {'status': 'error: at least two faces have the same color'}
        
 
     def test200_010_ShouldCreateDefaultCubeStatus(self):
@@ -152,4 +156,9 @@ class DispatchTest(unittest.TestCase):
         resultDict = self.string2dict(resultString)
         self.assertIn('cube', resultDict)
         
+    def test200_910_ShouldReturnErrorDuplicateColors(self):
+        queryString="op=create&f=red&u=red"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('error', resultDict['status'][0:5])
     

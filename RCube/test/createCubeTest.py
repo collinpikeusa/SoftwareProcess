@@ -117,7 +117,11 @@ class CreateCubeTest(unittest.TestCase):
 #                    'orange', 'orange', 'orange',
 #                    'orange', 'orange', 'orange',
 #                    'orange', 'orange', 'orange']}
-
+#
+# Sad Path
+#    test 910
+#        input: parm: {'op': 'create', 'f': 'red', 'u': 'red'}
+#        output: {'status': 'error: at least two faces have the same color'}
 
     def test100_010_ShouldCreateEntireDefaultCube(self):
         parm = {'op': 'create'}
@@ -160,7 +164,7 @@ class CreateCubeTest(unittest.TestCase):
                 elementIndex += 1
     
     def test100_050_ShouldCreateCubeWithAllDifferentSidesButOneAndANumberAndInvalidSyntax(self):
-        parm = {'op': 'create', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 'under': '42'}
+        parm = {'op': 'create', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 't': '1','under': '42'}
         expectedFaces = ['f', 'r', 'b', 'l', '1', 'orange']
         actualResult = RCube.createCube(parm)
         elementIndex = 0
