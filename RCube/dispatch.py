@@ -11,7 +11,7 @@ def dispatch(parm={}):
 
 # ------------------- Inner Functions ---------------------
 def createCube(parm):
-    cube = ['green', 'green', 'green'
-            'green', 'green', 'green'
+    cube = ['green', 'green', 'green',
+            'green', 'green', 'green',
             'green', 'green', 'green']
     return cube
