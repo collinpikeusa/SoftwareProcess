@@ -31,11 +31,14 @@ class CreateCubeTest(unittest.TestCase):
 #            'orange', 'orange', 'orange',
 #            'orange', 'orange', 'orange', 'orange', 'orange', 'orange']} 
 
-    def test100_010_ShouldCreateOneElementCube(self):
+    def test100_010_ShouldCreateEntireDefaultCube(self):
         parm = {'op': 'create'}
-        expectedResult = 'green'
+        expectedFaces = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
         actualResult = RCube.createCube(parm)
-        for elementIndex in range(0,9):
-            self.assertEqual(expectedResult, actualResult[elementIndex])
+        elementIndex = 0
+        for face in expectedFaces:
+            for elementIndex in range(0,9):
+                self.assertEqual(face, actualResult[elementIndex])
+                elementIndex += 1
         
 
