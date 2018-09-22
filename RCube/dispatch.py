@@ -14,10 +14,9 @@ def createCube(parm):
     cube = []
     colors = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
     if('f' in parm):
-        color[0] = parm['f']
+        colors[0] = parm['f']
     
-    cube.extend(createSide(''))
-    for face in expectedFaces:
+    for face in colors:
         cube.extend(createSide(face))
     return cube
 
