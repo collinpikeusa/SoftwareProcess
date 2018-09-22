@@ -147,7 +147,7 @@ class DispatchTest(unittest.TestCase):
         queryString="op=create"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('cube', resultDict)
+        self.assertIn('cube', resultDict)
         
 
     
