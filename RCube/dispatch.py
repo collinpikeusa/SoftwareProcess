@@ -28,5 +28,5 @@ def createCube(parm):
             'red', 'red', 'red',
             'orange', 'orange', 'orange',
             'orange', 'orange', 'orange',
-            'orange', 'orange', 'orange']}
+            'orange', 'orange', 'orange']
     return cube
