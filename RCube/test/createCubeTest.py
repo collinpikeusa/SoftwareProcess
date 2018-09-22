@@ -33,8 +33,9 @@ class CreateCubeTest(unittest.TestCase):
 
     def test100_010_ShouldCreateOneElementCube(self):
         parm = {'op': 'create'}
-        expectedResult = ['green']
+        expectedResult = 'green'
         actualResult = RCube.createCube(parm)
-        self.assertListEqual(expectedResult, actualResult)
+        for elementIndex in range(0,9):
+            self.assertEqual(expectedResult, actualResult[elementIndex])
         
 
