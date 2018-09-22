@@ -134,7 +134,8 @@ class DispatchTest(unittest.TestCase):
 #            'red','red', 'red',
 #            'red', 'red', 'red',
 #            'orange', 'orange', 'orange',
-#            'orange', 'orange', 'orange', 'orange', 'orange', 'orange']}        
+#            'orange', 'orange', 'orange',
+#            'orange', 'orange', 'orange']}        
 
     def test200_010_ShouldCreateDefaultCubeStatus(self):
         queryString="op=create"

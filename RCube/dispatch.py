@@ -13,5 +13,20 @@ def dispatch(parm={}):
 def createCube(parm):
     cube = ['green', 'green', 'green',
             'green', 'green', 'green',
-            'green', 'green', 'green']
+            'green', 'green', 'green', 
+            'yellow', 'yellow', 'yellow',
+            'yellow', 'yellow', 'yellow',
+            'yellow', 'yellow', 'yellow',
+            'blue', 'blue', 'blue',
+            'blue', 'blue', 'blue',
+            'blue', 'blue', 'blue',
+            'white', 'white', 'white',
+            'white', 'white', 'white',
+            'white', 'white', 'white',
+            'red', 'red', 'red',
+            'red','red', 'red',
+            'red', 'red', 'red',
+            'orange', 'orange', 'orange',
+            'orange', 'orange', 'orange',
+            'orange', 'orange', 'orange']}
     return cube
