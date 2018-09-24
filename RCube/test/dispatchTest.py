@@ -158,6 +158,13 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('cube', resultDict)
+    
+    def test200_030_ShouldCreateDefaultCube(self):
+        queryString="op=create&f="
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('created', resultDict['status'][0:7])
         
     def test200_910_ShouldReturnErrorDuplicateColors(self):
         queryString="op=create&f=red&u=red"

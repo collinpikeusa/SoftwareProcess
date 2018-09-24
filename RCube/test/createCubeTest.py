@@ -118,10 +118,7 @@ class CreateCubeTest(unittest.TestCase):
 #                    'orange', 'orange', 'orange',
 #                    'orange', 'orange', 'orange']}
 #
-# Sad Path
-#    test 910
-#        input: parm: {'op': 'create', 'f': 'red', 'u': 'red'}
-#        output: {'status': 'error: at least two faces have the same color'}
+#    test 060
 
     def test100_010_ShouldCreateEntireDefaultCube(self):
         parm = {'op': 'create'}
@@ -173,7 +170,7 @@ class CreateCubeTest(unittest.TestCase):
                 self.assertEqual(face, actualResult[elementIndex])
                 elementIndex += 1
     
-    def test100_050_ShouldCreateCubeWithAllDefaultsWithEmptyString(self):
+    def test100_060_ShouldCreateCubeWithAllDefaultsWithEmptyString(self):
         parm = {'op': 'create', 'f': ''}
         expectedFaces = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
         actualResult = RCube.createCube(parm)
