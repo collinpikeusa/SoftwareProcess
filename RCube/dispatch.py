@@ -27,17 +27,23 @@ def createCube(parm):
     cube = []
     colors = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
     if('f' in parm):
-        colors[0] = parm['f']
+        if(parm['f'] is not ''):
+            colors[0] = parm['f']
     if('r' in parm):
-        colors[1] = parm['r']
+        if(parm['f'] is not ''):
+            colors[1] = parm['r']
     if('b' in parm):
-        colors[2] = parm['b']
+        if(parm['f'] is not ''):
+            colors[2] = parm['b']
     if('l' in parm):
-        colors[3] = parm['l']
+        if(parm['f'] is not ''):
+            colors[3] = parm['l']
     if('t' in parm):
-        colors[4] = parm['t']
+        if(parm['f'] is not ''):
+            colors[4] = parm['t']
     if('u' in parm):
-        colors[5] = parm['u']
+        if(parm['f'] is not ''):
+            colors[5] = parm['u']
     for face in colors:
         cube.extend(createSide(face))
     return cube

@@ -163,12 +163,5 @@ class DispatchTest(unittest.TestCase):
         queryString="op=create&f=red&u=red"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertIn('error', resultDict['status'][0:5])
-    
-    def test200_920_ShouldReturnErrorOnLT1(self):
-        queryString="op=create&f=f&r=r&b=b&l=&t=&u=f"
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertIn('error', resultDict['status'][0:5])
-    
+        self.assertIn('error', resultDict['status'][0:5])    
     

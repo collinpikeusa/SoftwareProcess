@@ -172,3 +172,13 @@ class CreateCubeTest(unittest.TestCase):
             for _ in range(0,9):
                 self.assertEqual(face, actualResult[elementIndex])
                 elementIndex += 1
+    
+    def test100_050_ShouldCreateCubeWithAllDefaultsWithEmptyString(self):
+        parm = {'op': 'create', 'f': ''}
+        expectedFaces = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
+        actualResult = RCube.createCube(parm)
+        elementIndex = 0
+        for face in expectedFaces:
+            for _ in range(0,9):
+                self.assertEqual(face, actualResult[elementIndex])
+                elementIndex += 1
