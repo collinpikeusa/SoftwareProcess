@@ -141,6 +141,9 @@ class DispatchTest(unittest.TestCase):
 #    test 910
 #        input: http://url/rcube?op=create&f=red&u=red
 #        output: {'status': 'error: at least two faces have the same color'}
+#    test 920
+#        input: http:// ... /rcube?op=create&f=f&r=r&b=b&l=l&t=1&u=0
+#        output {'status': 'error: at least one faces had a negative value'}
        
 
     def test200_010_ShouldCreateDefaultCubeStatus(self):
@@ -161,4 +164,11 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('error', resultDict['status'][0:5])
+    
+    def test200_920_ShouldReturnErrorOnLT1(self):
+        queryString="op=create&f=f&r=r&b=b&l=l&t=1&u=0"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('error', resultDict['status'][0:5])
+    
     
