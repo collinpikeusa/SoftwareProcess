@@ -1,3 +1,4 @@
+from __builtin__ import int
 
 def dispatch(parm={}):
     httpResponse = {}
@@ -5,7 +6,11 @@ def dispatch(parm={}):
         httpResponse['status'] = 'error: missing op'                
     elif(parm['op'] == 'create'):
         duplicate = 0
+        lessthanone = 0
         for i in parm.values():
+            if(i.isdigit()):
+                if(int(i) < 1):
+                    lessthanone += 1
             for j in parm.values():
                 if(i == j):
                     duplicate += 1
@@ -13,7 +18,9 @@ def dispatch(parm={}):
                 break
             else:
                 duplicate = 0
-        if(duplicate > 1):
+        if(lessthanone > 0):
+            httpResponse['status'] = 'error: at least one face had a negative value'
+        elif(duplicate > 1):
             httpResponse['status'] = 'error: at least two faces have the same color'
         else:  
             httpResponse['status'] = 'created'
