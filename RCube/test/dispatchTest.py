@@ -143,7 +143,7 @@ class DispatchTest(unittest.TestCase):
 #        output: {'status': 'error: at least two faces have the same color'}
 #    test 920
 #        input: http:// ... /rcube?op=create&f=f&r=r&b=b&l=l&t=1&u=0
-#        output {'status': 'error: at least one faces had a negative value'}
+#        output {'status': 'error: at least one face had a negative value'}
        
 
     def test200_010_ShouldCreateDefaultCubeStatus(self):

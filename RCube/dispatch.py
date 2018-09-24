@@ -11,11 +11,13 @@ def dispatch(parm={}):
                     duplicate += 1
             if(duplicate > 1):
                 break
+            else:
+                duplicate = 0
         if(duplicate > 1):
             httpResponse['status'] = 'error: at least two faces have the same color'
         else:  
             httpResponse['status'] = 'created'
-        httpResponse['cube'] = createCube(parm)
+            httpResponse['cube'] = createCube(parm)
     return httpResponse
 
 
@@ -41,6 +43,6 @@ def createCube(parm):
 
 def createSide(parm):
     side = []
-    for i in range(0, 9):
+    for _ in range(0, 9):
         side.append(parm)
     return side
