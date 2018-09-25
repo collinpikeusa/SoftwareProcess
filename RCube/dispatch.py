@@ -16,9 +16,12 @@ def dispatch(parm={}):
                 duplicate = 0
         if(duplicate > 1):
             httpResponse['status'] = 'error: at least two faces have the same color'
+        cube = createCube(parm)
+        if(isinstance(cube, int)):
+            httpResponse['status'] = 'error: at least two faces have the same color'
         else:  
             httpResponse['status'] = 'created'
-            httpResponse['cube'] = createCube(parm)
+            httpResponse['cube'] = cube
     return httpResponse
 
 
@@ -46,6 +49,17 @@ def createCube(parm):
             colors[5] = parm['u']
     for face in colors:
         cube.extend(createSide(face))
+
+    duplicate = 0
+    for i in colors:
+        for j in colors:
+            if(i == j):
+                duplicate += 1
+        if(duplicate > 1):
+            cube = -1
+            break
+        else:
+            duplicate = 0
     return cube
 
 def createSide(parm):
