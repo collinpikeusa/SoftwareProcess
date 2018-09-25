@@ -135,7 +135,30 @@ class DispatchTest(unittest.TestCase):
 #            'red', 'red', 'red',
 #            'orange', 'orange', 'orange',
 #            'orange', 'orange', 'orange',
-#            'orange', 'orange', 'orange']}   
+#            'orange', 'orange', 'orange']}  
+#
+#    input:     empty option value
+#        http://url/rcube?op=create&f=
+#    output:    default model cube, which is a JSON string:
+#        {'status': 'created', 'cube': [
+#            'green', 'green', 'green',
+#            'green', 'green', 'green',
+#            'green', 'green', 'green', 
+#            'yellow', 'yellow', 'yellow',
+#            'yellow', 'yellow', 'yellow',
+#            'yellow', 'yellow', 'yellow',
+#            'blue', 'blue', 'blue',
+#            'blue', 'blue', 'blue',
+#            'blue', 'blue', 'blue',
+#            'white', 'white', 'white',
+#            'white', 'white', 'white',
+#            'white', 'white', 'white',
+#            'red', 'red', 'red',
+#            'red','red', 'red',
+#            'red', 'red', 'red',
+#            'orange', 'orange', 'orange',
+#            'orange', 'orange', 'orange',
+#            'orange', 'orange', 'orange']} 
 #
 # Sad Path
 #    test 910
