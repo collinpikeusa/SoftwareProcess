@@ -199,5 +199,11 @@ class DispatchTest(unittest.TestCase):
         queryString="op=create&f=yellow"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
+        self.assertIn('error', resultDict['status'][0:5]) 
+    
+    def test200_930_ShouldReturnErrorDuplicateColorsOneGivenUpperCase(self):
+        queryString="op=create&f=Yellow"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
         self.assertIn('error', resultDict['status'][0:5])  
     
