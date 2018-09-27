@@ -1,3 +1,10 @@
+'''
+    Functions used for dispatch of microservice
+    Created on Sep 22, 2018
+    
+    @author: Collin Pike
+'''
+
 from __builtin__ import int
 
 def dispatch(parm={}):

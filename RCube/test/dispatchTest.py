@@ -1,3 +1,9 @@
+'''
+    Functions used for dispatch of microservice
+    Created on Sep 22, 2018
+    
+    @author: Collin Pike
+'''
 import unittest
 import httplib
 import json

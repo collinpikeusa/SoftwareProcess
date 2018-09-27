@@ -1,3 +1,10 @@
+'''
+    Functions used for starting Flask
+    Created on Sep 22, 2018
+    
+    @author: Collin Pike
+'''
+
 import os
 from flask import Flask, request
 import RCube.dispatch as RCube
