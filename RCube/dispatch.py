@@ -23,6 +23,22 @@ def dispatch(parm={}):
 
 # ------------------- Inner Functions ---------------------
 
+def createCube(parm):
+    cube = []
+    colors = changeColors(parm)
+    for face in colors:
+        cube.extend(createSide(face))
+
+    if(not isDuplicate(colors)):
+        return -1
+    return cube
+
+def createSide(parm):
+    side = []
+    for _ in range(0, 9):
+        side.append(parm)
+    return side
+
 def isDuplicate(colors):
     duplicate = 0
     for i in colors:
@@ -31,41 +47,20 @@ def isDuplicate(colors):
                 duplicate += 1
         
         if (duplicate > 1):
-            cube = -1
+            return False
         else:
             duplicate = 0
     
-    return cube
+    return True
 
-def createCube(parm):
-    cube = []
+def changeColors(parm):
     colors = ['green', 'yellow', 'blue', 'white', 'red', 'orange']
-    if('f' in parm):
-        if(parm['f'] is not ''):
-            colors[0] = parm['f']
-    if('r' in parm):
-        if(parm['f'] is not ''):
-            colors[1] = parm['r']
-    if('b' in parm):
-        if(parm['f'] is not ''):
-            colors[2] = parm['b']
-    if('l' in parm):
-        if(parm['f'] is not ''):
-            colors[3] = parm['l']
-    if('t' in parm):
-        if(parm['f'] is not ''):
-            colors[4] = parm['t']
-    if('u' in parm):
-        if(parm['f'] is not ''):
-            colors[5] = parm['u']
-    for face in colors:
-        cube.extend(createSide(face))
-
-    cube = isDuplicate(colors)
-    return cube
-
-def createSide(parm):
-    side = []
-    for _ in range(0, 9):
-        side.append(parm)
-    return side
+    faces = ['f', 'r', 'b', 'l', 't', 'u']
+    for i in range(0, 6):
+        side = faces[i]
+        if (side in parm):
+            if (parm[side] is ''):
+                return -1
+            else:
+                colors[i] = parm[side]
+    return colors
