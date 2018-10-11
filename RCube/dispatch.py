@@ -13,8 +13,8 @@ def dispatch(parm={}):
         httpResponse['status'] = 'error: missing op'                
     elif(parm['op'] == 'create'):
         cube = createCube(parm)
-        if(isinstance(cube, int)):
-            httpResponse['status'] = 'error: at least two faces have the same color'
+        if(isinstance(cube, int) and cube == -1):
+            httpResponse['status'] = 'error: at least two faces have the same color'   
         else:  
             httpResponse['status'] = 'created'
             httpResponse['cube'] = cube
@@ -26,6 +26,8 @@ def dispatch(parm={}):
 def createCube(parm):
     cube = []
     colors = changeColors(parm)
+    if(isinstance(colors,int)):
+        return -2
     for face in colors:
         cube.extend(createSide(face))
 
