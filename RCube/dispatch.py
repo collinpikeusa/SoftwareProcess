@@ -14,7 +14,9 @@ def dispatch(parm={}):
     elif(parm['op'] == 'create'):
         cube = createCube(parm)
         if(isinstance(cube, int) and cube == -1):
-            httpResponse['status'] = 'error: at least two faces have the same color'   
+            httpResponse['status'] = 'error: at least two faces have the same color'  
+        elif(isinstance(cube, int) and cube == -2):
+            httpResponse['status'] = 'error: at least two faces have the same color'  
         else:  
             httpResponse['status'] = 'created'
             httpResponse['cube'] = cube
