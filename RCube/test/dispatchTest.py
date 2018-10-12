@@ -413,15 +413,38 @@ class DispatchTest(unittest.TestCase):
 #                    "cube" model of the Rubik's cube
 # outputs:    A JSON string containing, at a minimum, a key of "status"
 #
+# Happy Path
+# input: Finished cube supplied
+#        http:// ...myURL... /rcube?op=check&f=f&r=r&b=b&l=l&t=t&u=u&
+#        cube=f,f,f,f,f,f,f,f,f,
+#             r,r,r,r,r,r,r,r,r,
+#             b,b,b,b,b,b,b,b,b,
+#             l,l,l,l,l,l,l,l,l,
+#             t,t,t,t,t,t,t,t,t,
+#             u,u,u,u,u,u,u,u,u
+# output:
+#
 # Sad path 
 #      input:   zero options
 #               http:// ... myURL ... /rcube?op=check
 #      output:  {'status': 'error: cube must be specified'}
 
-    def test300_900_ShouldCreateDefaultCubeStatus(self):
+# Happy Path
+    def test300_010_ShouldReturnFull(self):
+        queryString="op=check&f=f&r=r&b=b&l=l&t=t&u=u&"\
+                    "cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,"\
+                    "b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u"\
+                    ",u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('full', resultDict['status'][0:6])
+
+# Sad Path
+    def test300_900_ShouldErrorOnNoCubeDefined(self):
         queryString="op=check"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-        self.assertEquals('error:', resultDict['status'][0:6])
+        self.assertEquals('error: cube must be specified', resultDict['status'])
     
