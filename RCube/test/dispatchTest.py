@@ -395,4 +395,33 @@ class DispatchTest(unittest.TestCase):
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
+
+#Acceptance Tests
+#
+# 300 dispatch -- op=check
+# Desired level of confidence: boundary value analysis
+# Analysis 
+# inputs:    http:// ...myURL... /rcube?op=check<options>
+#            where <options> can be zero or one of:
+#                    "f"    Specifies the color of the front side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "green" if missing.  Arrives unvalidated.        
+#                    "r"    Specifies the color of the right side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "yellow" if missing.  Arrives unvalidated.        
+#                    "b"    Specifies the color of the back side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "blue" if missing.  Arrives unvalidated.        
+#                    "l"    Specifies the color of the left side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "white" if missing.  Arrives unvalidated.        
+#                    "t"    Specifies the color of the top side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "red" if missing.  Arrives unvalidated.        
+#                    "u"    Specifies the color of the under side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "orange" if missing.  Arrives unvalidated.        
+#            and must contain:
+#                    "cube" model of the Rubik's cube
+# outputs:    A JSON string containing, at a minimum, a key of "status"
+#
+# Sad path 
+#      input:   zero options
+#               http:// ... myURL ... /rcube?op=check
+#      output:  {'status': 'error: cube must be specified'}
+
+    def test300_900_ShouldCreateDefaultCubeStatus(self):
+        queryString="op=check"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:', resultDict['status'][0:6])
     

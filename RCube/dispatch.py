@@ -10,7 +10,9 @@ from __builtin__ import int
 def dispatch(parm={}):
     httpResponse = {}
     if(not('op' in parm)):
-        httpResponse['status'] = 'error: missing op'                
+        httpResponse['status'] = 'error: missing op'
+    elif(parm['op'] == ''):
+        httpResponse['status'] = 'error: op code is missing'                 
     elif(parm['op'] == 'create'):
         cube = createCube(parm)
         if(isinstance(cube, int) and cube == -1):
@@ -20,8 +22,8 @@ def dispatch(parm={}):
         else:  
             httpResponse['status'] = 'created'
             httpResponse['cube'] = cube
-    elif(parm['op'] == ''):
-        httpResponse['status'] = 'error: op code is missing' 
+    elif(parm['op'] == 'check'):
+        httpResponse['status'] = 'error: cube must be specified' 
     else:
         httpResponse['status'] = 'error: %s is not a valid op' % parm['op']
     return httpResponse
