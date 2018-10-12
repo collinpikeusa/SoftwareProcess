@@ -8,6 +8,7 @@
 import os
 from flask import Flask, request
 import RCube.dispatch as RCube
+from werkzeug.datastructures import ImmutableMultiDict
 
 app = Flask(__name__)
 
@@ -22,8 +23,9 @@ app = Flask(__name__)
 def server():
     try:
         parm = {}
-        for key in request.args:
-            parm[key] = str(request.args[key])
+        operations = request.args.to_dict(flat=False)
+        for key in operations:
+            parm[key] = str(operations[key][-1])
         result = RCube.dispatch(parm)
         return str(result)
     except Exception as e:

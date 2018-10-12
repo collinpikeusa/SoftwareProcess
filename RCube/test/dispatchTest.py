@@ -79,9 +79,9 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-    
-    def test100_010_ShouldReturnSuccessKey(self):
-        queryString="op=create"
+
+    def test100_020_ShouldReturnSuccessKey(self):
+        queryString="op=check&op=create"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
