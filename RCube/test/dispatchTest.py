@@ -448,3 +448,10 @@ class DispatchTest(unittest.TestCase):
         self.assertIn('status', resultDict)
         self.assertEquals('error: cube must be specified', resultDict['status'])
     
+    def test300_910_ShouldErrorOnIncorrectSize(self):
+        queryString="op=check&f=2&r=o&b=g&l=r&t=b&u=y&cube=y,y,b,b,o,g,o,b,w,r"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error: cube is not sized properly', resultDict['status'])
+    

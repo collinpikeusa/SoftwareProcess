@@ -7,7 +7,7 @@ import unittest
 import RCube.dispatch as RCube
 
 
-class IsFullTest(unittest.TestCase):
+class IsValidCubeSizeTest(unittest.TestCase):
     def test_cubeSizeCheck(self):
         cube = 'purple,purple,purple,'\
                'purple,purple,purple,'\
@@ -27,6 +27,6 @@ class IsFullTest(unittest.TestCase):
                'orange,orange,orange,'\
                'orange,orange,orange,'\
                'orange,orange,orange'
-        actual = RCube.isFull(cube.split(','))
+        actual = RCube.isValidCubeSize(cube.split(','))
         expected = True
         self.assertEquals(actual,expected)

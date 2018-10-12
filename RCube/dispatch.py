@@ -48,12 +48,27 @@ def checkCube(parm):
     if('cube' not in parm):
         return 'error: cube must be specified'
     cube = parm['cube'].split(',')
-    print(cube)
-    if(isFull(cube)):
+    if(not isValidCubeSize(cube)):
+        return 'error: cube is not sized properly'
+    if(isFull(cube, colors)):
         return 'full'
     return 'error: check failed'
-    
-def isFull(cube):
+
+# ------ Supporting functions --------------
+
+def isFull(cube, colors):
+    start = 0
+    end = 9
+    for color in colors:
+        for i in range(start, end):
+            if(color != cube[i]):
+                return False
+        start += 9
+        end += 9
+    return True
+        
+
+def isValidCubeSize(cube):
     sideCount = 0
     for _ in cube:
         sideCount += 1
@@ -73,12 +88,10 @@ def isDuplicate(colors):
         for j in colors:
             if (i == j):
                 duplicate += 1
-        
         if (duplicate > 1):
             return False
         else:
             duplicate = 0
-    
     return True
 
 def changeColors(parm):
