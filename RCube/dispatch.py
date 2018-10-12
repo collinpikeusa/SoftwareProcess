@@ -16,10 +16,12 @@ def dispatch(parm={}):
         if(isinstance(cube, int) and cube == -1):
             httpResponse['status'] = 'error: at least two faces have the same color'  
         elif(isinstance(cube, int) and cube == -2):
-            httpResponse['status'] = 'error: at least two faces have the same color'  
+            httpResponse['status'] = 'error: face color is missing'  
         else:  
             httpResponse['status'] = 'created'
             httpResponse['cube'] = cube
+    elif(parm['op'] == ''):
+        httpResponse['status'] = 'error: op code is missing' 
     else:
         httpResponse['status'] = 'error: %s is not a valid op' % parm['op']
     return httpResponse

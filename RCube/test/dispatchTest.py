@@ -107,13 +107,7 @@ class DispatchTest(unittest.TestCase):
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
-    
-#     def test100_920_ShouldReturnErrorOnInvalidOp(self):
-#         queryString = "op=initiate"
-#         resultString = self.httpGetAndResponse(queryString)
-#         resultDict = self.string2dict(resultString)
-#         self.assertIn('status', resultDict)
-#         self.assertEquals('error:', resultDict['status'][0:6])
+
 #         
 #Acceptance Tests
 #
