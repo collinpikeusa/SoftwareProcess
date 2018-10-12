@@ -8,7 +8,6 @@
 import os
 from flask import Flask, request
 import RCube.dispatch as RCube
-from werkzeug.datastructures import ImmutableMultiDict
 
 app = Flask(__name__)
 

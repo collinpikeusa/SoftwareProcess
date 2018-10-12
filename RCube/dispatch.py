@@ -23,7 +23,7 @@ def dispatch(parm={}):
             httpResponse['status'] = 'created'
             httpResponse['cube'] = cube
     elif(parm['op'] == 'check'):
-        httpResponse['status'] = 'error: cube must be specified' 
+        httpResponse['status'] = checkCube(parm)
     else:
         httpResponse['status'] = 'error: %s is not a valid op' % parm['op']
     return httpResponse
@@ -42,6 +42,24 @@ def createCube(parm):
     if(not isDuplicate(colors)):
         return -1
     return cube
+
+def checkCube(parm):
+    colors = changeColors(parm)
+    if('cube' not in parm):
+        return 'error: cube must be specified'
+    cube = parm['cube'].split(',')
+    print(cube)
+    if(isFull(cube)):
+        return 'full'
+    return 'error: check failed'
+    
+def isFull(cube):
+    sideCount = 0
+    for _ in cube:
+        sideCount += 1
+    if(sideCount == 54):
+        return True
+    return False
 
 def createSide(parm):
     side = []
