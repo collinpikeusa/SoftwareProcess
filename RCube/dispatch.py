@@ -20,6 +20,8 @@ def dispatch(parm={}):
         else:  
             httpResponse['status'] = 'created'
             httpResponse['cube'] = cube
+    else:
+        httpResponse['status'] = 'error: %s is not a valid op' % parm['op']
     return httpResponse
 
 
