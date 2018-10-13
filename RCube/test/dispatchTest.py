@@ -451,10 +451,10 @@ class DispatchTest(unittest.TestCase):
         self.assertEquals('crosses', resultDict['status'])
     
     def test300_010_ShouldReturnSpots(self):
-        queryString="op=check&f=w&r=g&b=y&l=b&t=r&u=o&"\
-                    "cube=r,w,r,w,w,w,r,w,r,w,g,w,g,g,"\
-                    "g,w,g,w,o,y,o,y,y,y,o,y,o,y,b,y,b,b"\
-                    ",b,y,b,y,g,r,g,r,r,r,g,r,g,b,o,b,o,o,o,b,o,b"
+        queryString="op=check&f=r&r=b&b=o&l=g&t=w&u=y&cube="\
+                    "y,y,y,y,r,y,y,y,y,o,o,o,o,b,o,o,o,o,w,"\
+                    "w,w,w,o,w,w,w,w,r,r,r,r,g,r,r,r,r,b,b,b,"\
+                    "b,w,b,b,b,b,g,g,g,g,y,g,g,g,g"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)

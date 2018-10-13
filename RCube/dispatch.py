@@ -54,6 +54,8 @@ def checkCube(parm):
         return 'full'
     if(isCrosses(cube)):
         return 'crosses'
+    if(isSpots(cube)):
+        return 'spots'
     return 'error: check failed'
 
 # ------ Supporting functions --------------
@@ -78,6 +80,22 @@ def isCrosses(cube):
         side = [cornerColor, anotherColor, cornerColor,
                 anotherColor, anotherColor, anotherColor,
                 cornerColor, anotherColor, cornerColor]
+        face = cube[start:end]
+        if(side != face):
+            return False
+        start += 9
+        end += 9
+    return True
+
+def isSpots(cube):
+    start = 0
+    end = 9
+    for _ in range(0, 6):
+        spotColor = cube[start + 4]
+        anotherColor = cube[start]
+        side = [anotherColor, anotherColor, anotherColor,
+                anotherColor, spotColor, anotherColor,
+                anotherColor, anotherColor, anotherColor]
         face = cube[start:end]
         if(side != face):
             return False
