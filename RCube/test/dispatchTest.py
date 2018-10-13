@@ -460,6 +460,15 @@ class DispatchTest(unittest.TestCase):
         self.assertIn('status', resultDict)
         self.assertEquals('spots', resultDict['status'])
 
+    def test300_010_ShouldReturnIllegal(self):
+        queryString="op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube="\
+                    "f,f,f,f,f,b,f,f,f,r,r,r,r,r,r,r,r,r,f,"\
+                    "b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,"\
+                    "t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('illegal cube', resultDict['status'])
 # Sad Path
     def test300_900_ShouldErrorOnNoCubeDefined(self):
         queryString="op=check"
