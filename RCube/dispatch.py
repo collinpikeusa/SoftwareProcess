@@ -124,10 +124,50 @@ def isValidCube(cube, colors):
         return False
     
 def checkEdges(cube, colors):
+    if(not (checkTopFaceEdges(cube, colors) or checkBackFaceEdges(cube, colors) or checkLeftFaceEdges(cube, colors)
+       or checkRightFaceEdges(cube, colors))):
+        return False
+    return True
+        
+
+def checkCorners(cube, colors):
+    front_top_left = set([colors[0], colors[4], colors[3]])
+    front_top_right = set([colors[0], colors[4], colors[1]])
+    front_under_left = set([colors[0], colors[5], colors[3]])
+    front_under_right = set([colors[0], colors[5], colors[1]])
+    back_top_left = set([colors[2], colors[4], colors[3]])
+    back_top_right = set([colors[2], colors[4], colors[1]])
+    back_under_left = set([colors[2], colors[5], colors[3]])
+    back_under_right = set([colors[2], colors[5], colors[1]])
+    
+    # ------- Top Left Corner Check -------
+    cube_front_left_top = set([cube[0], cube[42], cube[29]])
+    cube_front_right_top = set([cube[2], cube[44], cube[9]])
+    cube_front_left_under = set([cube[6], cube[45], cube[35]])
+    cube_front_right_under = set([cube[8], cube[47], cube[15]])
+    cube_back_left_top = set([cube[20], cube[36], cube[27]])
+    cube_back_right_top = set([cube[18], cube[38], cube[11]])
+    cube_back_left_under = set([cube[24], cube[17], cube[53]])
+    cube_back_right_under = set([cube[26], cube[51], cube[33]])
+    
+    cube_corners_original = [front_top_left, front_top_right, front_under_left, front_under_right,
+                             back_top_left, back_top_right, back_under_left, back_under_right]
+    cube_corners_mixed = [cube_front_left_top, cube_front_left_under, cube_front_right_top, cube_front_right_under,
+                          cube_back_left_top, cube_back_left_under, cube_back_right_top, cube_back_right_under]
+    
+    match = 0
+    for original_corner in cube_corners_original:
+        for mixed_corner in cube_corners_mixed:
+            if(len(list(mixed_corner - original_corner)) == 0):
+                match += 1
+    if(match != 8):
+        return False
+    return True
+
+def checkTopFaceEdges(cube, colors):
     front_back = [colors[0], colors[2]]
     top_under = [colors[4], colors[5]]
     left_right = [colors[1], colors[3]]
-    # Checking front side of cube
     if(cube[1] in front_back):
         if(cube[43] in front_back):
             return False
@@ -164,7 +204,11 @@ def checkEdges(cube, colors):
     elif(cube[7] in top_under):
         if(cube[46] in top_under):
             return False
-    #Checking Back side of cube
+
+def checkBackFaceEdges(cube, colors):
+    front_back = [colors[0], colors[2]]
+    top_under = [colors[4], colors[5]]
+    left_right = [colors[1], colors[3]]
     if(cube[19] in front_back):
         if(cube[37] in front_back):
             return False
@@ -202,7 +246,11 @@ def checkEdges(cube, colors):
         if(cube[52] in top_under):
             return False
 
-    # ------ right side -----
+def checkRightFaceEdges(cube, colors):
+    front_back = [colors[0], colors[2]]
+    top_under = [colors[4], colors[5]]
+    left_right = [colors[1], colors[3]]
+
     if(cube[10] in front_back):
         if(cube[41] in front_back):
             return False
@@ -221,8 +269,12 @@ def checkEdges(cube, colors):
     elif(cube[16] in top_under):
         if(cube[50] in top_under):
             return False
+
+def checkLeftFaceEdges(cube, colors):
+    front_back = [colors[0], colors[2]]
+    top_under = [colors[4], colors[5]]
+    left_right = [colors[1], colors[3]]
     
-    # ------ left side ------
     if(cube[39] in front_back):
         if(cube[28] in front_back):
             return False
@@ -241,40 +293,6 @@ def checkEdges(cube, colors):
     elif(cube[48] in top_under):
         if(cube[34] in top_under):
             return False
-    return True
-
-def checkCorners(cube, colors):
-    front_top_left = set([colors[0], colors[4], colors[3]])
-    front_top_right = set([colors[0], colors[4], colors[1]])
-    front_under_left = set([colors[0], colors[5], colors[3]])
-    front_under_right = set([colors[0], colors[5], colors[1]])
-    back_top_left = set([colors[2], colors[4], colors[3]])
-    back_top_right = set([colors[2], colors[4], colors[1]])
-    back_under_left = set([colors[2], colors[5], colors[3]])
-    back_under_right = set([colors[2], colors[5], colors[1]])
-    
-    # ------- Top Left Corner Check -------
-    cube_front_left_top = set([cube[0], cube[42], cube[29]])
-    cube_front_right_top = set([cube[2], cube[44], cube[9]])
-    cube_front_left_under = set([cube[6], cube[45], cube[35]])
-    cube_front_right_under = set([cube[8], cube[47], cube[15]])
-    cube_back_left_top = set([cube[20], cube[36], cube[27]])
-    cube_back_right_top = set([cube[18], cube[38], cube[11]])
-    cube_back_left_under = set([cube[24], cube[17], cube[53]])
-    cube_back_right_under = set([cube[26], cube[51], cube[33]])
-    
-    cube_corners_original = [front_top_left, front_top_right, front_under_left, front_under_right,
-                             back_top_left, back_top_right, back_under_left, back_under_right]
-    cube_corners_mixed = [cube_front_left_top, cube_front_left_under, cube_front_right_top, cube_front_right_under,
-                          cube_back_left_top, cube_back_left_under, cube_back_right_top, cube_back_right_under]
-    
-    match = 0
-    for original_corner in cube_corners_original:
-        for mixed_corner in cube_corners_mixed:
-            if(len(list(mixed_corner - original_corner)) == 0):
-                match += 1
-    if(match != 8):
-        return False
     return True
 
 def checkMiddle(cube, colors):
