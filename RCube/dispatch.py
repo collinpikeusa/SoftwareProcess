@@ -52,10 +52,12 @@ def checkCube(parm):
         return 'error: cube is not sized properly'
     if(isFull(cube, colors)):
         return 'full'
+    if(isCrosses(cube)):
+        return 'crosses'
     return 'error: check failed'
 
 # ------ Supporting functions --------------
-
+# -- Check functions ---
 def isFull(cube, colors):
     start = 0
     end = 9
@@ -66,7 +68,22 @@ def isFull(cube, colors):
         start += 9
         end += 9
     return True
-        
+
+def isCrosses(cube):
+    start = 0
+    end = 9
+    for _ in range(0, 6):
+        cornerColor = cube[start]
+        anotherColor = cube[start + 1]
+        side = [cornerColor, anotherColor, cornerColor,
+                anotherColor, anotherColor, anotherColor,
+                cornerColor, anotherColor, cornerColor]
+        face = cube[start:end]
+        if(side != face):
+            return False
+        start += 9
+        end += 9
+    return True
 
 def isValidCubeSize(cube):
     sideCount = 0
@@ -76,11 +93,15 @@ def isValidCubeSize(cube):
         return True
     return False
 
+# -- Create Functions ---
+
 def createSide(parm):
     side = []
     for _ in range(0, 9):
         side.append(parm)
     return side
+
+# -- Other Functions
 
 def isDuplicate(colors):
     duplicate = 0
