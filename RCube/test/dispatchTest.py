@@ -472,7 +472,7 @@ class DispatchTest(unittest.TestCase):
 
     def test300_010_ShouldReturnUnknown(self):
         queryString="op=check&f=o&r=b&b=r&l=g&t=y&u=w&cube="\
-                    "y,y,b,b,o,g,o,b,w, r,b,b,r,b,w,b,w,r,o"\
+                    "y,y,b,b,o,g,o,b,w,r,b,b,r,b,w,b,w,r,o"\
                     ",g,g,o,r,g,g,b,b,y,y,o,y,g,o,o,o,g,r,w"\
                     ",w,r,y,r,g,o,y,w,y,r,g,w,r,y,w,w"
         resultString = self.httpGetAndResponse(queryString)

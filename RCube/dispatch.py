@@ -54,6 +54,8 @@ def checkCube(parm):
         return 'illegal cube'
     elif(not checkEdges(cube, colors)):
         return 'illegal cube'
+    elif(not checkMiddle(cube, colors)):
+        return 'illegal cube'
     elif(not checkSwaps(cube, colors)):
         return 'illegal cube'
     elif(isFull(cube, colors)):
@@ -275,20 +277,27 @@ def checkCorners(cube, colors):
         return False
     return True
 
+def checkMiddle(cube, colors):
+    middle = 4
+    for color in colors:
+        if(color != cube[middle]):
+            return False
+        middle += 9
+    return True
+
 def checkSwaps(cube, colors):
+    swaps = 0
     start = 0
     end = 9
-    swaps = 0.0
     for color in colors:
-        for face in range(start, end):
-            if(cube[face] != color):
+        for i in range(start, end):
+            if(color != cube[i]):
                 swaps += 1
+        if(swaps == 1):
+            return False
         start += 9
         end += 9
-    swaps /= 2
-    if(swaps % 2 == 0):
-        return True
-    return False
+    return True
 # -- Create Functions ---
 
 def createSide(parm):
