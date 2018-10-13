@@ -34,7 +34,17 @@ class CheckCubeTest(unittest.TestCase):
         actual = RCube.checkCube(cubeDefinition)
         expected = 'spots'
         self.assertEqual(actual, expected)
-   
+    
+    def test_check_egdes_and_corners(self):
+        cube = "f,f,f,f,f,b,f,f,f,r,r,r,r,r,r,"\
+               "r,r,r,f,b,b,b,b,b,b,b,b,l,l,l,"\
+               "l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,"\
+               "u,u,u,u,u,u,u,u,u"
+        cubeDefinition = {'op': 'check', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 't': 't', 'u': 'u', 'cube': cube}
+        actual = RCube.checkCube(cubeDefinition)
+        expected = 'illegal cube'
+        self.assertEqual(actual, expected)
+        
     def test_CheckCubeSadPath(self):
         cube = 'f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,'\
                'b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u'\
