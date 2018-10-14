@@ -468,7 +468,7 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-        self.assertEquals('illegal cube', resultDict['status'])
+        self.assertEquals('error: illegal cube', resultDict['status'])
 
     def test300_010_ShouldReturnUnknown(self):
         queryString="op=check&f=o&r=b&b=r&l=g&t=y&u=w&cube="\

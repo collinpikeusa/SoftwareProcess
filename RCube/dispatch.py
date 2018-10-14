@@ -55,13 +55,13 @@ def checkCube(parm):
     elif(not checkNumberOfColors(cube, colors)):
         return 'error: incorrect number of colors'
     elif(not checkCorners(cube, colors)):
-        return 'illegal cube'
+        return 'error: illegal cube'
     elif(not checkEdges(cube, colors)):
-        return 'illegal cube'
+        return 'error: illegal cube'
     elif(not checkMiddle(cube, colors)):
-        return 'illegal cube'
+        return 'error: illegal cube'
     elif(not checkSwaps(cube, colors)):
-        return 'illegal cube'
+        return 'error: illegal cube'
     elif(isFull(cube, colors)):
         return 'full'
     elif(isCrosses(cube)):

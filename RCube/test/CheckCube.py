@@ -53,6 +53,15 @@ class CheckCubeTest(unittest.TestCase):
         actual = RCube.checkCube(cubeDefinition)
         expected = 'unknown'
         self.assertEqual(actual, expected)
+    
+    def test_incorrect_middle_cube(self):
+        cube = "y,y,b,b,o,g,o,b,w,r,b,b,r,b,w,b,w,r,o"\
+               ",g,g,o,r,g,g,b,b,y,y,o,y,g,o,o,o,g,r,w"\
+               ",w,r,y,r,g,o,y,w,y,r,g,w,r,y,w,w"
+        cubeDefinition = {'op': 'check', 'f': 'o', 'r': 'b', 'b': 'r', 'l': 'g', 't': 'y', 'u': 'w', 'cube': cube}
+        actual = RCube.checkCube(cubeDefinition)
+        expected = 'unknown'
+        self.assertEqual(actual, expected)
         
     def test_CheckCubeSadPath(self):
         cube = 'f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,'\
