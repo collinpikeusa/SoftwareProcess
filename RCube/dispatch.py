@@ -48,7 +48,7 @@ def checkCube(parm):
     if('cube' not in parm):
         return 'error: cube must be specified'
     cube = parm['cube'].split(',')
-    if(isDuplicate(colors)):
+    if(not isDuplicate(colors)):
         return 'error: colors are defined as duplicates'
     if(not isValidCubeSize(cube)):
         return 'error: cube is not sized properly'

@@ -494,4 +494,14 @@ class DispatchTest(unittest.TestCase):
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
         self.assertEquals('error: cube is not sized properly', resultDict['status'])
+
+    def test300_920_ShouldErrorOnIncorrectNumberOfColors(self):
+        queryString="op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube="\
+                    "f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,"\
+                    "b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,"\
+                    "t,t,t,t,t,u,u,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error: cube is has too many of a color', resultDict['status'])
     
