@@ -503,5 +503,5 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-        self.assertEquals('error: cube is has too many of a color', resultDict['status'])
+        self.assertEquals('error: incorrect number of colors', resultDict['status'])
     

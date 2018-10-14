@@ -50,8 +50,10 @@ def checkCube(parm):
     cube = parm['cube'].split(',')
     if(not isDuplicate(colors)):
         return 'error: colors are defined as duplicates'
-    if(not isValidCubeSize(cube)):
+    elif(not isValidCubeSize(cube)):
         return 'error: cube is not sized properly'
+    elif(not checkNumberOfColors(cube, colors)):
+        return 'error: incorrect number of colors'
     elif(not checkCorners(cube, colors)):
         return 'illegal cube'
     elif(not checkEdges(cube, colors)):
@@ -318,6 +320,17 @@ def checkSwaps(cube, colors):
         start += 9
         end += 9
     return True
+
+def checkNumberOfColors(cube, colors):
+    for color in colors:
+        numberOfColor = 0
+        for i in range(0, 54):
+            if(color == cube[i]):
+                numberOfColor += 1
+        if(numberOfColor != 9):
+            return False
+    return True
+            
 # -- Create Functions ---
 
 def createSide(parm):
