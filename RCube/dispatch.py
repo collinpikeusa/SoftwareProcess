@@ -77,6 +77,8 @@ def checkCube(parm):
 def rotateCube(parm):
     if('cube' not in parm):
         return 'error: cube must be specified'
+    if('face' not in parm):
+        return 'error: face is missing'
 
 # ------ Supporting functions --------------
 # -- Check functions ---
