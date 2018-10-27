@@ -75,10 +75,14 @@ def checkCube(parm):
     return 'unknown'
 
 def rotateCube(parm):
+    faces = ['f', 'F', 'r', 'R', 'b', 'B', 'l', 'L', 't', 'T', 'u', 'U']
     if('cube' not in parm):
         return 'error: cube must be specified'
     if('face' not in parm):
         return 'error: face is missing'
+    if(parm['face'] not in faces):
+        return 'error: face is unknown'
+    
 
 # ------ Supporting functions --------------
 # -- Check functions ---
