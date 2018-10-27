@@ -396,12 +396,16 @@ class DispatchTest(unittest.TestCase):
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
 
+# ---------------------------------------------------------------------
+
+        
 #Acceptance Tests
 #
-# 300 dispatch -- op=check
+# 300 dispatch -- {'op':'check'}
 # Desired level of confidence: boundary value analysis
 # Analysis 
-# inputs:    http:// ...myURL... /rcube?op=check<options>
+# inputs:    http:// ...myURL... /rcube?op=check<options><cube>
+#            where <cube> is mandatory, string representing each color element of the cube
 #            where <options> can be zero or one of:
 #                    "f"    Specifies the color of the front side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "green" if missing.  Arrives unvalidated.        
 #                    "r"    Specifies the color of the right side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "yellow" if missing.  Arrives unvalidated.        
@@ -409,99 +413,286 @@ class DispatchTest(unittest.TestCase):
 #                    "l"    Specifies the color of the left side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "white" if missing.  Arrives unvalidated.        
 #                    "t"    Specifies the color of the top side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "red" if missing.  Arrives unvalidated.        
 #                    "u"    Specifies the color of the under side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "orange" if missing.  Arrives unvalidated.        
-#            and must contain:
-#                    "cube" model of the Rubik's cube
+#
 # outputs:    A JSON string containing, at a minimum, a key of "status"
 #
-# Happy Path
-# input: Finished cube supplied
-#        http:// ...myURL... /rcube?op=check&f=f&r=r&b=b&l=l&t=t&u=u&
-#        cube=f,f,f,f,f,f,f,f,f,
-#             r,r,r,r,r,r,r,r,r,
-#             b,b,b,b,b,b,b,b,b,
-#             l,l,l,l,l,l,l,l,l,
-#             t,t,t,t,t,t,t,t,t,
-#             u,u,u,u,u,u,u,u,u
-# output:
-#
-# Sad path 
+# Happy path 
 #      input:   zero options
-#               http:// ... myURL ... /rcube?op=check
-#      output:  {'status': 'error: cube must be specified'}
-
-# Happy Path
-    def test300_010_ShouldReturnFull(self):
-        queryString="op=check&f=f&r=r&b=b&l=l&t=t&u=u&"\
-                    "cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,"\
-                    "b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u"\
-                    ",u,u,u,u,u,u,u,u"
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertIn('status', resultDict)
-        self.assertEquals('full', resultDict['status'])
+#               http:// ... myURL ... /rcube?op=check<options>
+#      output:  default model cube, which is JSON string: 
+#                {'status': 'created', <options>} 
+#                options:    "full", "spots", "crosses", "unknown"
     
-    def test300_010_ShouldReturnCrosses(self):
-        queryString="op=check&f=w&r=g&b=y&l=b&t=r&u=o&"\
-                    "cube=r,w,r,w,w,w,r,w,r,w,g,w,g,g,"\
-                    "g,w,g,w,o,y,o,y,y,y,o,y,o,y,b,y,b,b"\
-                    ",b,y,b,y,g,r,g,r,r,r,g,r,g,b,o,b,o,o,o,b,o,b"
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertIn('status', resultDict)
-        self.assertEquals('crosses', resultDict['status'])
     
-    def test300_010_ShouldReturnSpots(self):
-        queryString="op=check&f=r&r=b&b=o&l=g&t=w&u=y&cube="\
-                    "y,y,y,y,r,y,y,y,y,o,o,o,o,b,o,o,o,o,w,"\
-                    "w,w,w,o,w,w,w,w,r,r,r,r,g,r,r,r,r,b,b,b,"\
-                    "b,w,b,b,b,b,g,g,g,g,y,g,g,g,g"
+# Sad Path 
+    def test300_900_ShouldReturnErrorMissingCube(self):
+        queryString = "op=check&f=f&r=r&b=b"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-        self.assertEquals('spots', resultDict['status'])
-
-    def test300_010_ShouldReturnIllegal(self):
-        queryString="op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube="\
-                    "f,f,f,f,f,b,f,f,f,r,r,r,r,r,r,r,r,r,f,"\
-                    "b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,"\
-                    "t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertIn('status', resultDict)
-        self.assertEquals('error: illegal cube', resultDict['status'])
-
-    def test300_010_ShouldReturnUnknown(self):
-        queryString="op=check&f=o&r=b&b=r&l=g&t=y&u=w&cube="\
-                    "y,y,b,b,o,g,o,b,w,r,b,b,r,b,w,b,w,r,o"\
-                    ",g,g,o,r,g,g,b,b,y,y,o,y,g,o,o,o,g,r,w"\
-                    ",w,r,y,r,g,o,y,w,y,r,g,w,r,y,w,w"
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertIn('status', resultDict)
-        self.assertEquals('unknown', resultDict['status'])
-
-# Sad Path
-    def test300_900_ShouldErrorOnNoCubeDefined(self):
-        queryString="op=check"
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertIn('status', resultDict)
-        self.assertEquals('error: cube must be specified', resultDict['status'])
+        self.assertEquals('error:',resultDict['status'][0:6])
     
-    def test300_910_ShouldErrorOnIncorrectSize(self):
-        queryString="op=check&f=2&r=o&b=g&l=r&t=b&u=y&cube=y,y,b,b,o,g,o,b,w,r"
+    def test300_901_ShouldReturnErrorOnBadOp(self):
+        queryString="op=cjeck"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-        self.assertEquals('error: cube is not sized properly', resultDict['status'])
-
-    def test300_920_ShouldErrorOnIncorrectNumberOfColors(self):
-        queryString="op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube="\
-                    "f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,"\
-                    "b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,"\
-                    "t,t,t,t,t,u,u,u,u,u,u,u,u,u,u,u"
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertIn('status', resultDict)
-        self.assertEquals('error: incorrect number of colors', resultDict['status'])
+        self.assertEquals('error:',resultDict['status'][0:6])
     
+    def test300_902_ShouldReturnErrorOnEmptyCube(self):
+        queryString = "op=check&cube="
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test300_903_ShouldReturnErrorOnInvalidCube(self):
+        queryString = "op=check&f=a&r=b&b=c&l=d&t=e&u=f&cube=a,b,c,d,e,f"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_904_ShouldReturnErrorInvalidCubKey(self):
+        queryString = 'op=check&f=f&r=r&b=3&l=4&t=t&u=u&cbe=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u'
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_905_ShouldReturnErrorOnCubeSizeLTValidSize(self):
+        queryString = "op=check&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_906_ShouldReturnErrorOnCubeSizeGTValidSize(self):
+        queryString = "op=check&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_907_ShouldReturnErrorOnInvalidFaceColors(self):
+        queryString = "op=check&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,7,7,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_908_ShouldReturnErrorOnInvalidFaceColors(self):
+        queryString = "op=check&cube=green,green,green,green,green,green,green,green,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,blue,blue,blue,blue,blue,bluw,blue,blue,blue,white,white,whte,white,white,white,white,white,white,red,red,red,red,red,red,red,red,red,orange,orange,orange,orange,orange,orange,orange,orange,orange"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test300_909_ShouldReturnErrorOnInvalidMiddleElement(self):
+        queryString = "op=check&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,2,1,1,1,1,2,2,2,2,1,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test300_910_ShouldReturnErrorOnInvalidMiddleElement(self):
+        queryString = "op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,l,b,b,b,b,l,l,l,l,b,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test300_911_ShouldReturnErrorOnInvalidMiddleElementWithDefaultColors(self):
+        queryString = "op=check&cube=green,green,green,green,green,green,green,green,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,blue,blue,blue,blue,blue,blue,blue,blue,blue,white,white,white,white,white,white,white,white,white,red,red,red,red,orange,red,red,red,red,orange,orange,orange,orange,red,orange,orange,orange,orange"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_912_ShouldReturnErrorOnWhenMiddleElementOfFacesNotUnique(self):
+        queryString = "op=check&u=1cube=green,green,green,green,1,green,green,green,green,yellow,yellow,yellow,yellow,blue,yellow,yellow,yellow,yellow,blue,blue,blue,blue,yellow,blue,blue,blue,blue,white,white,white,white,white,white,white,white,white,red,red,red,red,1,red,red,red,red,1,red,1,1,1,1,1,1,green"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+# ----------------------------------------------------------------------        
+# ----  Sad path tests for missing faces - Assignment 5 --------------
+# ----------------------------------------------------------------------       
+    def test300_913_ShouldReturnErrorOnEmptyFrontSideOfFaceColor(self):
+        queryString = "op=check&f=&r=r&b=b&l=l&t=t&u=u&cube=green,green,green,green,green,green,green,green,green,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_914_ShouldReturnErrorOnEmptyRightSideOfFaceColor(self):
+        queryString = "op=check&r=&b=b&l=l&t=t&u=u&cube=green,green,green,green,green,green,green,green,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_915_ShouldReturnErrorOnEmptyBackSideOfFaceColor(self):
+        queryString = "op=check&f=f&r=r&b=&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,blue,blue,blue,blue,blue,blue,blue,blue,blue,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_916_ShouldReturnErrorOnEmptyLeftSideOfFaceColor(self):
+        queryString = "op=check&f=f&r=r&b=b&l=&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,white,white,white,white,white,white,white,white,white,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_917_ShouldReturnErrorOnEmptyTopSideOfFaceColor(self):
+        queryString = "op=check&f=f&r=r&b=b&l=l&t=&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,red,red,red,red,red,red,red,red,red,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_918_ShouldReturnErrorOnEmptyUnderSideOfFaceColor(self):
+        queryString = "op=check&f=f&r=r&b=b&l=l&t=t&u=&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,orange,orange,orange,orange,orange,orange,orange,orange,orange"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+# ----------------------------------------------------------------------  
+# ----  Sad path tests for adjacent elements - Assignment 5 --------------
+# ----------------------------------------------------------------------    
+    def test300_919_ShouldReturnErrorOnConflictsOnCorner(self):
+        queryString = "op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,f,f,b,f,f,f,r,r,r,r,r,r,r,r,r,f,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_920_ShouldReturnErrorOnConflictsOnCorner(self):
+        queryString = "op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,l,r,r,b,b,b,b,b,b,b,b,b,l,l,l,r,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_921_ShouldReturnErrorOnConflictsOnEdge(self):
+        queryString = "op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,t,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,u,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,f,t,t,t,t,t,u,u,u,b,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test300_922_ShouldReturnErrorOnConflictsOnEdge(self):
+        queryString = "op=check&f=f&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,l,r,l,r,b,b,b,b,b,b,b,b,b,l,l,l,r,l,r,l,l,l,t,t,t,u,t,t,t,t,t,u,t,u,u,u,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+
+# ----------------------------------------------------------------------    
+    
+# Happy path
+# ----------------------------------------------------------------------  
+# ----  Happy path tests for status full - Assignment 5 --------------
+# ----------------------------------------------------------------------     
+    def test300_010_ShouldReturnStatusFullWithNumbers(self):
+        queryString = "op=check&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('full',resultDict['status'])
+    
+    def test300_015_ShouldReturnStatusFullWithLetters(self):
+        queryString = "op=check&f=2&r=z&b=1&l=6&t=4&u=B&cube=2,2,2,2,2,2,2,2,2,z,z,z,z,z,z,z,z,z,1,1,1,1,1,1,1,1,1,6,6,6,6,6,6,6,6,6,4,4,4,4,4,4,4,4,4,B,B,B,B,B,B,B,B,B"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('full',resultDict['status'])
+    
+    def test300_020_ShouldReturnStatusFullWithDefaultCube(self):
+        queryString = "op=check&cube=green,green,green,green,green,green,green,green,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,blue,blue,blue,blue,blue,blue,blue,blue,blue,white,white,white,white,white,white,white,white,white,red,red,red,red,red,red,red,red,red,orange,orange,orange,orange,orange,orange,orange,orange,orange"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('full',resultDict['status'])
+    
+    def test300_025_ShouldReturnStatusFullWithColors(self):
+        queryString = "op=check&f=yellow&r=green&b=white&l=blue&t=orange&u=red&cube=yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,green,green,green,green,green,green,green,green,green,white,white,white,white,white,white,white,white,white,blue,blue,blue,blue,blue,blue,blue,blue,blue,orange,orange,orange,orange,orange,orange,orange,orange,orange,red,red,red,red,red,red,red,red,red"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('full',resultDict['status'])
+    
+# ----------------------------------------------------------------------  
+# ----  Happy path tests for status crosses - Assignment 5 -------------
+# ----------------------------------------------------------------------       
+    def test300_030_ShouldReturnStatusCrossesWithNumbers(self):
+        queryString = "op=check&f=2&r=3&b=5&l=6&t=1&u=4&cube=1,2,1,2,2,2,1,2,1,2,3,2,3,3,3,2,3,2,4,5,4,5,5,5,4,5,4,5,6,5,6,6,6,5,6,5,3,1,3,1,1,1,3,1,3,6,4,6,4,4,4,6,4,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('crosses',resultDict['status'])
+        
+    def test300_035_ShouldReturnStatusCrossesWithLetters(self):
+        queryString = "op=check&f=w&r=g&b=y&l=b&t=r&u=o&cube=r,w,r,w,w,w,r,w,r,w,g,w,g,g,g,w,g,w,o,y,o,y,y,y,o,y,o,y,b,y,b,b,b,y,b,y,g,r,g,r,r,r,g,r,g,b,o,b,o,o,o,b,o,b"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('crosses',resultDict['status'])
+         
+    def test300_040_ShouldReturnStatusCrossesWithColors(self):
+        queryString = "op=check&f=green&r=red&b=blue&l=orange&t=white&u=yellow&cube=white,green,white,green,green,green,white,green,white,green,red,green,red,red,red,green,red,green,yellow,blue,yellow,blue,blue,blue,yellow,blue,yellow,blue,orange,blue,orange,orange,orange,blue,orange,blue,red,white,red,white,white,white,red,white,red,orange,yellow,orange,yellow,yellow,yellow,orange,yellow,orange"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('crosses',resultDict['status'])
+    
+# ----------------------------------------------------------------------  
+# ----  Happy path tests for status spots - Assignment 5 ---------------
+# ----------------------------------------------------------------------   
+    def test300_045_ShouldReturnStatusSpotsWithNumbers(self):
+        queryString = "op=check&f=2&r=1&b=5&l=4&t=3&u=6&cube=1,1,1,1,2,1,1,1,1,3,3,3,3,1,3,3,3,3,4,4,4,4,5,4,4,4,4,6,6,6,6,4,6,6,6,6,2,2,2,2,3,2,2,2,2,5,5,5,5,6,5,5,5,5"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('spots',resultDict['status'])
+        
+    def test300_050_ShouldReturnStatusSpotsWithLetters(self):
+        queryString = "op=check&f=r&r=b&b=o&l=g&t=w&u=y&cube=y,y,y,y,r,y,y,y,y,o,o,o,o,b,o,o,o,o,w,w,w,w,o,w,w,w,w,r,r,r,r,g,r,r,r,r,b,b,b,b,w,b,b,b,b,g,g,g,g,y,g,g,g,g"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('spots',resultDict['status'])
+        
+    def test300_055_ShouldReturnStatusSpotsWithColors(self):
+        queryString = "op=check&cube=yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,red,red,red,red,yellow,red,red,red,red,white,white,white,white,blue,white,white,white,white,orange,orange,orange,orange,white,orange,orange,orange,orange,green,green,green,green,red,green,green,green,green,blue,blue,blue,blue,orange,blue,blue,blue,blue"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('spots',resultDict['status'])
+
+# ----------------------------------------------------------------------  
+# ----  Happy path tests for status unknown - Assignment 5 -------------
+# ----------------------------------------------------------------------       
+    def test300_060_ShouldReturnStatusUnknownWithNumbers(self):
+        queryString = "op=check&f=1&r=2&b=3&l=4&t=5&u=6&cube=3,1,1,1,1,1,3,1,6,5,4,5,5,2,3,3,2,6,1,3,5,6,3,5,1,4,1,3,6,6,2,4,2,6,3,5,4,5,2,4,5,3,2,4,4,2,6,4,2,6,6,4,5,2"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('unknown',resultDict['status'])
+        
+    def test300_065_ShouldReturnStatusUnknownWithDefaultColors(self):
+        queryString = "op=check&cube=orange,green,white,blue,green,orange,white,red,white,red,orange,yellow,white,yellow,white,red,yellow,yellow,orange,blue,green,green,blue,white,red,red,green,yellow,blue,green,red,white,yellow,orange,orange,blue,red,orange,blue,white,red,yellow,yellow,red,blue,orange,blue,green,green,orange,green,white,yellow,blue"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('unknown',resultDict['status'])
+        
+    def test300_070_ShouldReturnStatusUnknownWithColors(self):
+        queryString = "op=check&f=white&r=orange&l=red&b=yellow&t=green&u=blue&cube=yellow,red,green,red,white,white,white,blue,white,white,yellow,orange,red,orange,orange,red,red,orange,yellow,green,red,green,yellow,blue,yellow,blue,white,green,green,red,yellow,red,green,orange,orange,red,yellow,yellow,green,white,green,orange,blue,blue,orange,blue,orange,green,white,blue,yellow,blue,white,blue"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('unknown',resultDict['status'])
+    
+    def test300_075_ShouldReturnStatusUnknownWithLetters(self):
+        queryString = "op=check&f=f&r=r&l=l&b=b&t=t&u=u&cube=f,t,f,f,f,r,b,l,f,r,u,r,t,r,t,r,u,l,b,r,l,f,b,b,u,u,r,u,u,l,l,l,l,b,b,l,f,f,t,b,t,l,t,b,t,t,t,u,r,u,f,u,r,b"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('unknown',resultDict['status'])
+    
+    def test300_080_ShouldReturnStatusUnknownWithLetters(self):
+        queryString = "op=check&f=o&r=b&b=r&l=g&t=y&u=w&cube=y,y,b,b,o,g,o,b,w,r,b,b,r,b,w,b,w,r,o,g,g,o,r,g,g,b,b,y,y,o,y,g,o,o,o,g,r,w,w,r,y,r,g,o,y,w,y,r,g,w,r,y,w,w"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('unknown',resultDict['status'])    

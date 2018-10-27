@@ -42,7 +42,7 @@ class CheckCubeTest(unittest.TestCase):
                "u,u,u,u,u,u,u,u,u"
         cubeDefinition = {'op': 'check', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 't': 't', 'u': 'u', 'cube': cube}
         actual = RCube.checkCube(cubeDefinition)
-        expected = 'illegal cube'
+        expected = 'error: illegal cube'
         self.assertEqual(actual, expected)
     
     def test_unknown_cube(self):
@@ -67,7 +67,7 @@ class CheckCubeTest(unittest.TestCase):
         cube = 'f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,'\
                'b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u'\
                ',u,u,u,u,u,u,u'
-        cubeDefinition = {'op': 'check', 'f': 'f', 'r': 'r', 'b': 'b', 'l': 'l', 't': 't', 'u': 'u', 'cube': cube}
+        cubeDefinition = {'op': 'check', 'f': '', 'r': 'r', 'b': 'b', 'l': 'l', 't': 't', 'u': 'u', 'cube': cube}
         actual = RCube.checkCube(cubeDefinition)
         expected = 'error:'
         self.assertEqual(actual[0:6], expected)
