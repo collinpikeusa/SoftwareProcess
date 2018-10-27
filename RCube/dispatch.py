@@ -24,6 +24,8 @@ def dispatch(parm={}):
             httpResponse['cube'] = cube
     elif(parm['op'] == 'check'):
         httpResponse['status'] = checkCube(parm)
+    elif(parm['op'] == 'rotate'):
+        httpResponse['status'] = rotateCube(parm)
     else:
         httpResponse['status'] = 'error: %s is not a valid op' % parm['op']
     return httpResponse
@@ -71,6 +73,10 @@ def checkCube(parm):
     if(not checkCorners(cube, color)):
         return 'error: illegal cube'
     return 'unknown'
+
+def rotateCube(parm):
+    if('cube' not in parm):
+        return 'error: cube must be specified'
 
 # ------ Supporting functions --------------
 # -- Check functions ---
