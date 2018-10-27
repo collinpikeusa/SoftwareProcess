@@ -767,3 +767,11 @@ class DispatchTest(unittest.TestCase):
         resultDict = self.string2dict(resultString)
         self.assertEquals('rotated',resultDict['status'])
         self.assertEquals(expected, resultDict['cube'])
+
+    def test400_100_ShouldReturnRotatedCubeOnL(self):
+        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=L"
+        expected = ['y','g','g','y','g','g','y','g','g','r','r','r','r','r','r','r','r','r','b','b','w','b','b','w','b','b','w','o','o','o','o','o','o','o','o','o','g','w','w','g','w','w','g','w','w','b','y','y','b','y','y','b','y','y']        
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('rotated',resultDict['status'])
+        self.assertEquals(expected, resultDict['cube'])
