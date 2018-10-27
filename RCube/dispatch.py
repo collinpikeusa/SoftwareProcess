@@ -25,7 +25,12 @@ def dispatch(parm={}):
     elif(parm['op'] == 'check'):
         httpResponse['status'] = checkCube(parm)
     elif(parm['op'] == 'rotate'):
-        httpResponse['status'] = rotateCube(parm)
+        rotatedCube = rotateCube(parm)
+        if(rotatedCube[0:5] == 'error'):
+            httpResponse['status'] = rotatedCube
+        else:
+            httpResponse['status'] = 'rotated'
+            httpResponse['cube'] = rotatedCube 
     else:
         httpResponse['status'] = 'error: %s is not a valid op' % parm['op']
     return httpResponse
@@ -78,13 +83,51 @@ def rotateCube(parm):
     faces = ['f', 'F', 'r', 'R', 'b', 'B', 'l', 'L', 't', 'T', 'u', 'U']
     if('cube' not in parm):
         return 'error: cube must be specified'
+    checkIfValidCube = checkCube(parm)
+    if(checkIfValidCube[0:5] == 'error'):
+        return checkIfValidCube
     if('face' not in parm):
         return 'error: face is missing'
     if(parm['face'] not in faces):
         return 'error: face is unknown'
+    cube = parm['cube'].split(',')
+    if(parm['face'] is 'F'):
+        return rotateFaceF(cube)
+    return 'fail'
+    
     
 
 # ------ Supporting functions --------------
+# -- Rotate functions ---
+def rotateFaceF(cube):
+    rotatedCube = list(cube)
+    # fix front side
+    rotatedCube[0] = cube[2]
+    rotatedCube[1] = cube[5]
+    rotatedCube[2] = cube[8]
+    rotatedCube[3] = cube[1]
+    rotatedCube[5] = cube[7]
+    rotatedCube[6] = cube[0]
+    rotatedCube[7] = cube[3]
+    rotatedCube[8] = cube[6]
+    # fix top side
+    rotatedCube[42] = cube[9]
+    rotatedCube[43] = cube[12]
+    rotatedCube[44] = cube[15]
+    # fix right side
+    rotatedCube[9] = cube[47]
+    rotatedCube[12] = cube[46]
+    rotatedCube[15] = cube[45]
+    # fix under side
+    rotatedCube[45] = cube[29]
+    rotatedCube[46] = cube[32]
+    rotatedCube[47] = cube[35]
+    # fix left side
+    rotatedCube[29] = cube[44]
+    rotatedCube[32] = cube[43]
+    rotatedCube[35] = cube[42]
+    return rotatedCube
+    
 # -- Check functions ---
 def isFull(cube, colors):
     start = 0
