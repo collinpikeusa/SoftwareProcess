@@ -105,6 +105,8 @@ def rotateCube(parm):
         return rotateFaceb(cube)
     if(parm['face'] == 'L'):
         return rotateFaceL(cube)
+    if(parm['face'] == 'l'):
+        return rotateFacel(cube)
     return 'error in rotating cube'
 
 # ------ Supporting functions --------------
@@ -310,6 +312,35 @@ def rotateFaceL(cube):
     rotatedCube[0] = cube[45]
     rotatedCube[3] = cube[48]
     rotatedCube[6] = cube[51]
+    return rotatedCube
+
+def rotateFacel(cube):
+    rotatedCube = list(cube)
+    # fix Left side
+    rotatedCube[27] = cube[33]
+    rotatedCube[28] = cube[30]
+    rotatedCube[29] = cube[27]
+    rotatedCube[30] = cube[34]
+    rotatedCube[32] = cube[28]
+    rotatedCube[33] = cube[35]
+    rotatedCube[34] = cube[32]
+    rotatedCube[35] = cube[29]
+    # fix top side
+    rotatedCube[42] = cube[20]
+    rotatedCube[39] = cube[23]
+    rotatedCube[36] = cube[26]
+    # fix back side
+    rotatedCube[20] = cube[51]
+    rotatedCube[23] = cube[48]
+    rotatedCube[26] = cube[45]
+    # fix under side
+    rotatedCube[45] = cube[0]
+    rotatedCube[48] = cube[3]
+    rotatedCube[51] = cube[6]
+    # fix front side
+    rotatedCube[0] = cube[36]
+    rotatedCube[3] = cube[39]
+    rotatedCube[6] = cube[42]
     return rotatedCube
 
 # -- Check functions ---
