@@ -48,7 +48,7 @@ def createCube(parm):
 def checkCube(parm):
     color = defineColors(parm)
     if(color == -1):
-        return 'error: illegal cube'
+        return 'error: unsolvable cube configuration'
     if(not isDuplicate(color)):
         return 'error: at least two faces have the same color'
     if('cube' not in parm):
@@ -69,9 +69,9 @@ def checkCube(parm):
     if(isSpots(cube)):
         return 'spots'
     if(not checkEdges(cube, color)):
-        return 'error: illegal cube'
+        return 'error: unsolvable cube configuration'
     if(not checkCorners(cube, color)):
-        return 'error: illegal cube'
+        return 'error: unsolvable cube configuration'
     return 'unknown'
 
 def rotateCube(parm):
