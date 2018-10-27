@@ -704,3 +704,11 @@ class DispatchTest(unittest.TestCase):
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
         self.assertEquals('error: cube must be specified',resultDict['status'])
+    
+    def test400_020_ShouldReturnErrorOnMissingFace(self):
+        queryString = "rcube?op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b, o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error: face is missing',resultDict['status'])
+        
