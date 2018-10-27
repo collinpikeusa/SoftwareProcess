@@ -696,3 +696,11 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertEquals('unknown',resultDict['status'])    
+    
+# ------- Rotate Assignment 6 -------
+    def test400_010_ShouldReturnErrorOnUnspecifiedCube(self):
+        queryString = "op=rotate"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error: cube must be specified',resultDict['status'])
