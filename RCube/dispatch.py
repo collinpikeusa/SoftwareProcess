@@ -91,11 +91,11 @@ def rotateCube(parm):
     if(parm['face'] not in faces):
         return 'error: face is unknown'
     cube = parm['cube'].split(',')
-    if(parm['face'] is 'F'):
+    if(parm['face'] == 'F'):
         return rotateFaceF(cube)
-    return 'fail'
-    
-    
+    if(parm['face'] == 'f'):
+        return rotateFacef(cube)
+    return 'error in rotating cube'
 
 # ------ Supporting functions --------------
 # -- Rotate functions ---
@@ -127,7 +127,36 @@ def rotateFaceF(cube):
     rotatedCube[32] = cube[43]
     rotatedCube[35] = cube[42]
     return rotatedCube
-    
+
+def rotateFacef(cube):
+    rotatedCube = list(cube)
+    # fix front side
+    rotatedCube[0] = cube[6]
+    rotatedCube[1] = cube[3]
+    rotatedCube[2] = cube[0]
+    rotatedCube[3] = cube[7]
+    rotatedCube[5] = cube[1]
+    rotatedCube[6] = cube[8]
+    rotatedCube[7] = cube[5]
+    rotatedCube[8] = cube[2]
+    # fix top side
+    rotatedCube[42] = cube[35]
+    rotatedCube[43] = cube[32]
+    rotatedCube[44] = cube[29]
+    # fix right side
+    rotatedCube[9] = cube[42]
+    rotatedCube[12] = cube[43]
+    rotatedCube[15] = cube[44]
+    # fix under side
+    rotatedCube[45] = cube[15]
+    rotatedCube[46] = cube[12]
+    rotatedCube[47] = cube[9]
+    # fix left side
+    rotatedCube[29] = cube[45]
+    rotatedCube[32] = cube[46]
+    rotatedCube[35] = cube[47]
+    return rotatedCube
+
 # -- Check functions ---
 def isFull(cube, colors):
     start = 0
