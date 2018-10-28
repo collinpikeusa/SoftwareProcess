@@ -800,16 +800,16 @@ class DispatchTest(unittest.TestCase):
         self.assertEquals('rotated',resultDict['status'])
         self.assertEquals(expected, resultDict['cube'])
     
-    def test400_140_ShouldReturnRotatedCubeOnU(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=U"
+    def test400_140_ShouldReturnRotatedCubeOnu(self):
+        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=u"
         expected = ['g','g','g','g','g','g','o','o','o','r','r','r','r','r','r','g','g','g','b','b','b','b','b','b','r','r','r','o','o','o','o','o','o','b','b','b','w','w','w','w','w','w','w','w','w','y','y','y','y','y','y','y','y','y']         
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertEquals('rotated',resultDict['status'])
         self.assertEquals(expected, resultDict['cube'])
     
-    def test400_150_ShouldReturnRotatedCubeOnu(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=u"
+    def test400_150_ShouldReturnRotatedCubeOnU(self):
+        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=U"
         expected = ['g','g','g','g','g','g','r','r','r','r','r','r','r','r','r','b','b','b','b','b','b','b','b','b','o','o','o','o','o','o','o','o','o','g','g','g','w','w','w','w','w','w','w','w','w','y','y','y','y','y','y','y','y','y']         
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)

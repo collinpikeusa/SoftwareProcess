@@ -409,7 +409,7 @@ def rotateFacet(cube):
     rotatedCube[2] = cube[11]
     return rotatedCube
 
-def rotateFaceU(cube):
+def rotateFaceu(cube):
     rotatedCube = list(cube)
     # fix under side
     rotatedCube[45] = cube[51]
@@ -438,7 +438,7 @@ def rotateFaceU(cube):
     rotatedCube[8] = cube[35]
     return rotatedCube
 
-def rotateFaceu(cube):
+def rotateFaceU(cube):
     rotatedCube = list(cube)
     # fix under side
     rotatedCube[45] = cube[47]
