@@ -22,9 +22,8 @@ app = Flask(__name__)
 def server():
     try:
         parm = {}
-        operations = request.args.to_dict(flat=False)
-        for key in operations:
-            parm[key] = str(operations[key][-1])
+        for key in request.args:
+            parm[key] = str(request.args[key])
         result = RCube.dispatch(parm)
         return str(result)
     except Exception as e:
