@@ -1200,13 +1200,20 @@ class DispatchTest(unittest.TestCase):
         self.assertEquals('scrambled 67',resultDict['status'])
         self.assertEquals(len(resultDict['rotations']), 1)
     
-    def test500_003_ShouldReturnErrorOnInvalidN(self):
+    def test500_003_ShouldReturnSingleRotationScramble(self):
+        queryString="op=scramble&method=transition&n=2"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('scrambled 41',resultDict['status'])
+        self.assertEquals(len(resultDict['rotations']), 2)
+    
+    def test500_004_ShouldReturnErrorOnInvalidN(self):
         queryString="op=scramble&n=999"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertEquals('error',resultDict['status'][0:5])
 
-    def test500_003_ShouldReturnErrorOnInvalidMethodType(self):
+    def test500_005_ShouldReturnErrorOnInvalidMethodType(self):
         queryString="op=scramble&method=none"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)

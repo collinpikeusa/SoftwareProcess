@@ -129,6 +129,9 @@ def rotateCube(parm):
 def scrambleCube(parm):
     cube = createCube(parm)
     rotations = []
+    if('method' in parm):
+        if(parm['method'] != 'transition' or parm['method'] != 'random'):
+            return 'error: method is unknown', []
     if('n' in parm):
         n = int(parm['n'])
         if(n > 99 or n < 0):
