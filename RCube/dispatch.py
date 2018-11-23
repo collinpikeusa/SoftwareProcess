@@ -6,6 +6,7 @@
 '''
 
 from __builtin__ import int
+from random import randint
 
 def dispatch(parm={}):
     httpResponse = {}
@@ -32,8 +33,9 @@ def dispatch(parm={}):
             httpResponse['status'] = 'rotated'
             httpResponse['cube'] = rotatedCube 
     elif(parm['op'] == 'scramble'):
-        scrambleRandom = scrambleCube(parm)
+        scrambleRandom, rotations = scrambleCube(parm)
         httpResponse['status'] = 'scrambled '+ str(scrambleRandom)
+        httpResponse['rotations'] = rotations
     else:
         httpResponse['status'] = 'error: %s is not a valid op' % parm['op']
     return httpResponse
@@ -123,7 +125,12 @@ def rotateCube(parm):
 def scrambleCube(parm):
     cube = createCube(parm)
     randomnessValue = randomness(cube)
-    return randomnessValue
+    rotations = []
+    if('n' in parm):
+        n = int(parm['n'])
+        for _ in range(0, n):
+            rotations.append(randomRotation(cube))
+    return randomnessValue, rotations
     
 
 # ------ Supporting functions --------------
@@ -140,6 +147,45 @@ def randomness(cube):
                 element2 += 1
     returnValue = int(round((1/216.0) * randomnessValue * 100))
     return returnValue
+
+def randomRotation(cube):
+    randomNumber = randint(0, 12)
+    if(randomNumber == 0):
+        rotateFaceF(cube)
+        return 'F'
+    elif(randomNumber == 1):
+        rotateFacef(cube)
+        return 'f'
+    elif(randomNumber == 2):
+        rotateFaceB(cube)
+        return 'B'
+    elif(randomNumber == 3):
+        rotateFaceb(cube)
+        return 'b'
+    elif(randomNumber == 4):
+        rotateFaceR(cube)
+        return 'R'
+    elif(randomNumber == 5):
+        rotateFacer(cube)
+        return 'r'
+    elif(randomNumber == 6):
+        rotateFaceL(cube)
+        return 'L'
+    elif(randomNumber == 7):
+        rotateFacel(cube)
+        return 'l'
+    elif(randomNumber == 8):
+        rotateFaceT(cube)
+        return 'T'
+    elif(randomNumber == 9):
+        rotateFacet(cube)
+        return 't'
+    elif(randomNumber == 10):
+        rotateFaceU(cube)
+        return 'U'
+    elif(randomNumber == 11):
+        rotateFaceu(cube)
+        return 'u'
         
 # -- Rotate functions ---
 def rotateFaceF(cube):
