@@ -1191,4 +1191,4 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertEquals('scrambled 100',resultDict['status'])
-        self.assertEquals(resultDict['rotations'], '[]')
+        self.assertEquals(resultDict['rotations'], [])
