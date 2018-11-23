@@ -205,6 +205,7 @@ def randomRotation(cube):
     elif(randomNumber == 11):
         rotatedCube = rotateFaceu(cube)
         return 'u', rotatedCube
+
 def transition(cube, n):
     rotations = []
     minimum = 100
