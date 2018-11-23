@@ -1205,3 +1205,9 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertEquals('error',resultDict['status'][0:5])
+
+    def test500_003_ShouldReturnErrorOnInvalidMethodType(self):
+        queryString="op=scramble&method=none"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('error',resultDict['status'][0:5])
