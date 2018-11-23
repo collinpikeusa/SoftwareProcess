@@ -34,8 +34,12 @@ def dispatch(parm={}):
             httpResponse['cube'] = rotatedCube 
     elif(parm['op'] == 'scramble'):
         scrambleRandom, rotations = scrambleCube(parm)
-        httpResponse['status'] = 'scrambled '+ str(scrambleRandom)
-        httpResponse['rotations'] = rotations
+        scrambleRandom = str(scrambleRandom)
+        if(scrambleRandom[0:5] == 'error'):
+            httpResponse['status'] = scrambleRandom
+        else:
+            httpResponse['status'] = 'scrambled '+ scrambleRandom
+            httpResponse['rotations'] = rotations
     else:
         httpResponse['status'] = 'error: %s is not a valid op' % parm['op']
     return httpResponse
@@ -127,6 +131,8 @@ def scrambleCube(parm):
     rotations = []
     if('n' in parm):
         n = int(parm['n'])
+        if(n > 99 or n < 0):
+            return 'error: n is invalid', []
         for _ in range(0, n):
             rotation, cube = randomRotation(cube)
             rotations.append(rotation)

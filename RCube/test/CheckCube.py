@@ -70,4 +70,4 @@ class CheckCubeTest(unittest.TestCase):
         cubeDefinition = {'op': 'check', 'f': '', 'r': 'r', 'b': 'b', 'l': 'l', 't': 't', 'u': 'u', 'cube': cube}
         actual = RCube.checkCube(cubeDefinition)
         expected = 'error:'
-        self.assertEqual(actual[0:6], expected)
+        self.assertEqual(actual[0:6], expected)       
