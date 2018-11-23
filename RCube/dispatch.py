@@ -6,7 +6,7 @@
 '''
 
 from __builtin__ import int
-from random import randint
+from random import randint, choice
 
 def dispatch(parm={}):
     httpResponse = {}
@@ -130,16 +130,21 @@ def scrambleCube(parm):
     cube = createCube(parm)
     rotations = []
     if('method' in parm):
-        if(parm['method'] != 'transition' or parm['method'] != 'random'):
+        if(parm['method'] != 'transition' and parm['method'] != 'random'):
             return 'error: method is unknown', []
-    if('n' in parm):
-        n = int(parm['n'])
-        if(n > 99 or n < 0):
-            return 'error: n is invalid', []
-        for _ in range(0, n):
-            rotation, cube = randomRotation(cube)
-            rotations.append(rotation)
-    randomnessValue = randomness(cube)
+        if(parm['method'] == 'transition'):
+            if('n' in parm):
+                n = int(parm['n'])
+                return transition(cube, n)
+    else:
+        if('n' in parm):
+            n = int(parm['n'])
+            if(n > 99 or n < 0):
+                return 'error: n is invalid', []
+            for _ in range(0, n):
+                rotation, cube = randomRotation(cube)
+                rotations.append(rotation)
+        randomnessValue = randomness(cube)
     return randomnessValue, rotations
     
 
@@ -196,6 +201,39 @@ def randomRotation(cube):
     elif(randomNumber == 11):
         rotatedCube = rotateFaceu(cube)
         return 'u', rotatedCube
+def transition(cube, n):
+    rotations = []
+    minimum = 100
+    for _ in range(0, n):
+        rotatedCube = {}
+        possibleCubes = {}
+        rotatedCube['F'] = rotateFaceF(cube)
+        rotatedCube['f'] = rotateFacef(cube)
+        rotatedCube['B'] = rotateFaceB(cube)
+        rotatedCube['b'] = rotateFaceb(cube)
+        rotatedCube['R'] = rotateFaceR(cube)
+        rotatedCube['r'] = rotateFacer(cube)
+        rotatedCube['L'] = rotateFaceL(cube)
+        rotatedCube['l'] = rotateFacel(cube)
+        rotatedCube['T'] = rotateFaceT(cube)
+        rotatedCube['t'] = rotateFacet(cube)
+        rotatedCube['U'] = rotateFaceU(cube)
+        rotatedCube['u'] = rotateFaceu(cube)
+        for key in rotatedCube:
+            transitionCube = rotatedCube[key]
+            transitionRandomness = randomness(transitionCube)
+            if(transitionRandomness < minimum):
+                minimum = transitionRandomness
+                possibleCubes = {}
+                possibleCubes[key] = transitionCube
+            elif(transitionRandomness == minimum):
+                possibleCubes.update({key: transitionCube})
+        randomChoice = choice(possibleCubes.keys())
+        rotations.append(randomChoice)
+        cube = possibleCubes[randomChoice]
+        
+
+    return minimum, rotations 
         
 # -- Rotate functions ---
 def rotateFaceF(cube):
