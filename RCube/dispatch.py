@@ -126,24 +126,29 @@ def rotateCube(parm):
         return rotateFaceu(cube)
     return 'error in rotating cube'
 
+
+def random(cube, rotations, n):
+    for _ in range(0, n):
+        rotation, cube = randomRotation(cube)
+        rotations.append(rotation)
+    
+    randomnessValue = randomness(cube)
+    return randomnessValue
+
 def scrambleCube(parm):
     cube = createCube(parm)
     rotations = []
+    n = 0
+    if('n' in parm):
+        n = int(parm['n'])
+    if(n > 99 or n < 0):
+        return 'error: n is invalid', []
     if('method' in parm):
         if(parm['method'] != 'transition' and parm['method'] != 'random'):
             return 'error: method is unknown', []
         if(parm['method'] == 'transition'):
-            if('n' in parm):
-                n = int(parm['n'])
-                return transition(cube, n)
-    if('n' in parm):
-        n = int(parm['n'])
-        if(n > 99 or n < 0):
-            return 'error: n is invalid', []
-        for _ in range(0, n):
-            rotation, cube = randomRotation(cube)
-            rotations.append(rotation)
-    randomnessValue = randomness(cube)
+            return transition(cube, n)
+    randomnessValue = random(cube, rotations, n)
     return randomnessValue, rotations
     
 
@@ -155,7 +160,7 @@ def randomness(cube):
         for j in range(0, 8):
             element1 = i*9 + j
             element2 = element1 + 1
-            for k in range(j + 1, 9):
+            for _ in range(j + 1, 9):
                 if(cube[element1] == cube[element2]):
                     randomnessValue += 1
                 element2 += 1
