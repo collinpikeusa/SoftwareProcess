@@ -9,6 +9,10 @@ class DispatchTest(unittest.TestCase):
         self.errorValue = "error:"
         self.operation ="op"
         self.scramble ="create"
+        self.initialNumbersList = "3,1,1,1,1,1,3,1,6,5,4,5,5,2,3,3,2,6,1,3,5,6,3,5,1,4,1,3,6,6,2,4,2,6,3,5,4,5,2,4,5,3,2,4,4,2,6,4,2,6,6,4,5,2"
+        self.initialColorsList = "yellow,green,blue,blue,orange,white,yellow,orange,red,orange,blue,blue,blue,blue,green,green,green,green,white,orange,yellow,orange,red,red,yellow,green,white,blue,blue,green,yellow,green,red,green,red,orange,red,white,red,orange,yellow,yellow,red,yellow,white,blue,yellow,white,white,white,red,orange,white,orange"
+        self.facesWithNumbers = "f=1&r=2&b=3&l=4&t=5&u=6"
+        self.facesWithColors= "f=orange&r=blue&b=red&l=green&t=yellow&u=white"
 
     @classmethod
     def setUpClass(cls):
@@ -79,12 +83,6 @@ class DispatchTest(unittest.TestCase):
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-
-    def test100_020_ShouldReturnSuccessKey(self):
-        queryString="op=check&op=create"
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertIn('status', resultDict)
     
 # Sad path
     def test100_900_ShouldReturnErrorOnEmptyParm(self):
@@ -101,14 +99,31 @@ class DispatchTest(unittest.TestCase):
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
     
-    def test100_920_ShouldReturnErrorOnUnknownOp(self):
-        queryString="op=cre"
+    def test100_920_ShouldReturnErrorOnMissingOp(self):
+        queryString="key=value"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
-
-#         
+    
+# ---- New sad path test for dispatch{parm} - Assignment 5 ---------
+# ------------------------------------------------------------------
+    def test100_930_ShouldReturnErrorOnInvalidOp(self):
+        queryString = "op=initiate"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:', resultDict['status'][0:6])
+    
+    def test100_940_ShouldReturnErrorOnMissingOpCode(self):
+        queryString = "op="
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:', resultDict['status'][0:6])  
+# -------------------------------------------------------------------    
+    
+        
 #Acceptance Tests
 #
 # 200 dispatch -- op=create
@@ -389,13 +404,49 @@ class DispatchTest(unittest.TestCase):
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
     
-    def test200_920_ShouldReturnErrorOnMissingColor(self):
-        queryString ="op=create&f=&r=r"
+# ---- New Sad path test for {'op':'create'} - Assignment 5 ------------
+# ----------------------------------------------------------------------
+    def test200_920_ShouldReturnErrorOnMissingFrontFaceColor(self):
+        queryString = "op=create&b=b&f=&l=4&r=2"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
-
+    
+    def test200_930_ShouldReturnErrorOnMissingRightFaceColor(self):
+        queryString = "op=create&b=b&f=f&l=4&r=&u=1"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test200_940_ShouldReturnErrorOnMissingBackFaceColor(self):
+        queryString = "op=create&b=&l=2&r=4&u=u&t=purple"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test200_950_ShouldReturnErrorOnMissingLeftFaceColor(self):
+        queryString = "op=create&b=back&l=&r=4&u=u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test200_960_ShouldReturnErrorOnMissingTopFaceColor(self):
+        queryString = "op=create&l=1&r=4&u=u&t=&f=front"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test200_970_ShouldReturnErrorOnMissingUnderFaceColor(self):
+        queryString = "op=create&l=1&r=4&u=&t=top&f=front"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
 # ---------------------------------------------------------------------
 
         
@@ -517,7 +568,7 @@ class DispatchTest(unittest.TestCase):
         self.assertEquals('error:',resultDict['status'][0:6])
         
 # ----------------------------------------------------------------------        
-# ----  Sad path tests for missing faces - Assignment 5 --------------
+# ----  Sad path tests for missing facesWithNumbers - Assignment 5 --------------
 # ----------------------------------------------------------------------       
     def test300_913_ShouldReturnErrorOnEmptyFrontSideOfFaceColor(self):
         queryString = "op=check&f=&r=r&b=b&l=l&t=t&u=u&cube=green,green,green,green,green,green,green,green,green,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u"
@@ -591,7 +642,6 @@ class DispatchTest(unittest.TestCase):
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
         self.assertEquals('error:',resultDict['status'][0:6])
-
 # ----------------------------------------------------------------------    
     
 # Happy path
@@ -695,123 +745,442 @@ class DispatchTest(unittest.TestCase):
         queryString = "op=check&f=o&r=b&b=r&l=g&t=y&u=w&cube=y,y,b,b,o,g,o,b,w,r,b,b,r,b,w,b,w,r,o,g,g,o,r,g,g,b,b,y,y,o,y,g,o,o,o,g,r,w,w,r,y,r,g,o,y,w,y,r,g,w,r,y,w,w"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('unknown',resultDict['status'])    
-    
-# ------- Rotate Assignment 6 -------
-    def test400_010_ShouldReturnErrorOnUnspecifiedCube(self):
-        queryString = "op=rotate"
+        self.assertEquals('unknown',resultDict['status'])
+#------------------------------------------------------------------------------------------------------------------------------------
+
+#Acceptance Tests
+#
+# 400 dispatch -- {'op':'rotate'}
+# Desired level of confidence: boundary value analysis
+# Analysis 
+# inputs:    http:// ...myURL... /rcube?op=rotate<options><cube><face>
+#            where <cube> is mandatory, string representing each color element of the cube
+#            where <options> can be zero or one of:
+#                    "f"    Specifies the color of the front side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "green" if missing.  Arrives unvalidated.        
+#                    "r"    Specifies the color of the right side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "yellow" if missing.  Arrives unvalidated.        
+#                    "b"    Specifies the color of the back side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "blue" if missing.  Arrives unvalidated.        
+#                    "l"    Specifies the color of the left side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "white" if missing.  Arrives unvalidated.        
+#                    "t"    Specifies the color of the top side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "red" if missing.  Arrives unvalidated.        
+#                    "u"    Specifies the color of the under side of the cube.  It is a string of length .GT. 0.  Optional.  Defaults to "orange" if missing.  Arrives unvalidated.        
+#
+#            where <face> is mandatory, string having one of the values below:
+#                    f      turns the front face such that the top moves to the right
+#                    F      turns the front face such that the top moves to the left
+#                    r      turns the right face such that the top moves to the back
+#                    R      turns the right face such that the top moves to the front
+#                    b      turns the back face such that the top moves to the left
+#                    B      turns the back face such that the top moves to the right
+#                    l      turns the left face such that the top moves to the front
+#                    L      turns the left face such that the top moves to the back
+#                    t      turns the top face such that the front moves to the left
+#                    T      turns the top face such that the front moves to the right
+#                    u      turns the bottom face such that the front moves to the right
+#                    U      turns the bottom face such that the front moves to the left
+
+
+# outputs:    A JSON string containing, at a minimum, a key of "status"
+#
+# Happy path 
+#      input:   zero options
+#               http:// ... myURL ... /rcube?op=rotate<options><cube><face>
+#      output:  default model cube, which is JSON string: 
+#                {'status': 'rotated', 'cube': <theRotatedFace} 
+
+# ----------------------------------------------------------------------        
+# ----  Sad path tests for missing facesWithNumbers - Assignment 6--------------
+# ----------------------------------------------------------------------     
+    def test400_900_ShouldReturnErrorOnEmptyFrontSideOfFaceColor(self):
+        queryString = "op=rotate&f=&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u&face=F"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-        self.assertEquals('error: cube must be specified',resultDict['status'])
+        self.assertEquals('error:',resultDict['status'][0:6])
     
-    def test400_020_ShouldReturnErrorOnMissingFace(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y"
+    def test400_901_ShouldReturnErrorOnEmptyRightSideOfFaceColor(self):
+        queryString = "op=rotate&f=f&r=&b=b&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u&face=F"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-        self.assertEquals('error: face is missing',resultDict['status'])
+        self.assertEquals('error:',resultDict['status'][0:6])
     
-    def test400_030_ShouldReturnErrorOnUnknownFace(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=w"
+    def test400_902_ShouldReturnErrorOnEmptyBackSideOfFaceColor(self):
+        queryString = "op=rotate&f=f&r=r&b=&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u&face=F"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertIn('status', resultDict)
-        self.assertEquals('error: face is unknown',resultDict['status'])
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_903_ShouldReturnErrorOnEmptyLeftSideOfFaceColor(self):
+        queryString = "op=rotate&f=f&r=r&b=b&l=&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u&face=F"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_904_ShouldReturnErrorOnEmptyTopSideOfFaceColor(self):
+        queryString = "op=rotate&f=f&r=r&b=b&l=l&t=&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u&face=F"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_905_ShouldReturnErrorOnEmptyUnderSideOfFaceColor(self):
+        queryString = "op=rotate&f=f&r=r&b=b&l=l&t=t&u=&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u&face=F"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
             
-    def test400_040_ShouldReturnRotatedCubeOnF(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=F"
+# ----------------------------------------------------------------------  
+# ----  Sad path tests for adjacent elements - Assignment 6 --------------
+# ----------------------------------------------------------------------    
+    def test400_906_ShouldReturnErrorOnConflictsOnCornerWithLetters(self):
+        queryString = "op=rotate&f=f&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,l,r,b,b,b,b,b,b,b,b,b,r,l,l,l,l,l,l,l,l,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u&face=R"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        expected = ['g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'y', 'r', 'r', 'y', 'r', 'r','y', 'r', 'r', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'o', 'o', 'w', 'o', 'o', 'w', 'o', 'o', 'w','w','w','w','w','w','w','r','r','r','o','o','o','y','y','y','y','y','y']
         self.assertIn('status', resultDict)
-        self.assertEquals('rotated',resultDict['status'])
+        self.assertEquals('error:',resultDict['status'][0:6])
     
-    def test400_050_ShouldReturnRotatedCubeOnf(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=f"
+    def test400_907_ShouldReturnErrorOnConflictsOnCornerWithNumbers(self):
+        queryString = "op=rotate&f=3&r=1&b=4&l=2&t=6&u=5&cube=6,1,1,1,3,2,4,1,1,1,1,1,6,1,6,6,3,2,3,4,6,4,4,6,3,2,5,6,5,5,2,2,6,3,3,4,5,4,2,5,6,4,4,3,5,4,5,3,3,5,5,2,2,2&face=F"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        expected =  ['g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'w', 'r', 'r', 'w', 'r', 'r', 'w', 'r', 'r','b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'o', 'o', 'y', 'o', 'o', 'y', 'o', 'o', 'y','w','w','w','w','w','w','o','o','o','r','r','r','y','y','y','y','y','y']
         self.assertIn('status', resultDict)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_908_ShouldReturnErrorOnConflictsOnEdgeWithLetters(self):
+        queryString = "op=rotate&f=f&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,l,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,r,l,t,t,t,t,t,t,t,u,t,u,u,u,u,u,u,u,t,u&face=b"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
         
-    def test400_060_ShouldReturnRotatedCubeOnR(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=R"
-        expected = ['g','g','w','g','g','w','g','g','w','r','r','r','r','r','r','r','r','r','y','b','b','y','b','b','y','b','b','o','o','o','o','o','o','o','o','o','w','w','b','w','w','b','w','w','b','y','y','g','y','y','g','y','y','g']       
+    def test400_909_ShouldReturnErrorOnConflictsOnEdgeWithColorsWithNumbers(self):
+        queryString = "op=rotate&f=1&r=2&b=3&l=4&t=5&u=6&cube=4,1,1,5,1,4,2,2,1,6,4,1,3,2,5,3,1,4,5,5,5,4,3,3,2,3,4,6,1,3,6,4,2,3,5,3,5,1,2,4,5,6,4,2,6,6,2,5,3,6,6,6,2,1&face=L"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+# ----------------------------------------------------------------------   
     
-    def test400_070_ShouldReturnRotatedCubeOnr(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=r"
-        expected = ['g','g','y','g','g','y','g','g','y','r','r','r','r','r','r','r','r','r','w','b','b','w','b','b','w','b','b','o','o','o','o','o','o','o','o','o','w','w','g','w','w','g','w','w','g','y','y','b','y','y','b','y','y','b']        
+    def test400_910_ShouldReturnErrorMissingCube(self):
+        queryString = "op=rotate&f=f&r=r&b=b&l=l&t=t&u=u&face=f"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
     
-    def test400_080_ShouldReturnRotatedCubeOnB(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=B"
-        expected = ['g','g','g','g','g','g','g','g','g','r','r','w','r','r','w','r','r','w','b','b','b','b','b','b','b','b','b','y','o','o','y','o','o','y','o','o','o','o','o','w','w','w','w','w','w','y','y','y','y','y','y','r','r','r']        
+    def test400_911_ShouldReturnErrorOnBadOp(self):
+        queryString="op=rotte"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_912_ShouldReturnErrorOnEmptyCube(self):
+        queryString = "op=rotate&cube=&face=f&f=f&r=r&b=b&l=l&t=t&u=u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test400_913_ShouldReturnErrorOnInvalidCube(self):
+        queryString = "op=rotate&f=a&r=b&b=c&l=d&t=e&u=f&cube=a,a,a,a,a,a,a,a,a,b,,b,b,b,b,b,b,b,c,c,,c,c,c,c,c,c,d,d,d,d,d,d,d,d,d,e,e,e,e,e,,e,e,e,f,f,f,f,f,f,f,f,f'&face=f"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_914_ShouldReturnErrorInvalidCubKey(self):
+        queryString = 'op=rotate&face=F&f=f&r=r&b=3&l=4&t=t&u=u&cbe=f,f,f,f,f,f,f,f,f,r,r,r,r,r,r,r,r,r,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,t,t,t,t,t,t,t,t,t,u,u,u,u,u,u,u,u,u'
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_915_ShouldReturnErrorOnCubeSizeLTValidSize(self):
+        queryString = "op=rotate&face=r&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_916_ShouldReturnErrorOnCubeSizeGTValidSize(self):
+        queryString = "op=rotate&face=R&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_917_ShouldReturnErrorOnInvalidFaceColors(self):
+        queryString = "op=rotate&face=f&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,8,3,8,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,9,5,5,5,9,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_918_ShouldReturnErrorOnInvalidFaceColors(self):
+        queryString = "op=rotate&face=f&cube=green,green,green,green,green,green,green,green,greeen,yellow,yellow,yellow,yellow,yellow,yellow,yellw,yellow,yellow,blue,blue,blue,blue,blue,blue,blue,blue,blue,white,white,white,white,white,white,white,white,white,red,red,red,red,red,red,red,red,red,orange,orange,orange,orange,orange,orange,ornge,orange,orange"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test400_919_ShouldReturnErrorOnInvalidMiddleElement(self):
+        queryString = "op=rotate&face=f&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,4,3,3,3,3,4,4,4,4,3,4,4,4,4,5,5,5,5,6,5,5,5,5,6,6,6,6,5,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test400_920_ShouldReturnErrorOnInvalidMiddleElement(self):
+        queryString = "op=rotate&face=F&f=f&r=r&b=b&l=l&t=t&u=u&cube=f,f,f,f,r,f,f,f,f,r,r,r,r,f,r,r,r,r,b,b,b,b,b,b,b,b,b,l,l,l,l,l,l,l,l,l,t,t,t,t,u,t,t,t,t,u,u,u,u,t,u,u,u,u"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+        
+    def test400_921_ShouldReturnErrorOnInvalidMiddleElementWithDefaultColors(self):
+        queryString = "op=rotate&face=F&cube=green,green,green,green,yellow,green,green,green,green,yellow,yellow,yellow,yellow,blue,yellow,yellow,yellow,yellow,blue,blue,blue,blue,green,blue,blue,blue,blue,white,white,white,white,white,white,white,white,white,red,red,red,red,red,red,red,red,red,orange,orange,orange,orange,orange,orange,orange,orange,orange"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_922_ShouldReturnErrorOnWhenMiddleElementOfFacesNotUnique(self):
+        queryString = "op=rotate&face=R&u=1cube=green,green,green,green,1,green,green,green,green,yellow,yellow,yellow,yellow,blue,yellow,yellow,yellow,yellow,blue,blue,blue,blue,yellow,blue,blue,blue,blue,white,white,white,white,white,white,white,white,white,red,red,red,red,1,red,red,red,red,1,red,1,1,1,1,1,1,green"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_923_ShouldReturnErrorOnEmptyCube(self):
+        queryString = "op=rotate&cube=[]&face=F"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_924_ShouldReturnErrorOnInvalidFace(self):
+        queryString = "op=rotate&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6&face=G"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_925_ShouldReturnErrorOnInvalidFace(self):
+        queryString = "op=rotate&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6&face=12"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_926_ShouldReturnErrorOnEmptyFace(self):
+        queryString = "op=rotate&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6&face="
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+    
+    def test400_927_ShouldReturnErrorOnMissingFace(self):
+        queryString = "op=rotate&f=1&r=2&b=3&l=4&t=5&u=6&cube=1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertIn('status', resultDict)
+        self.assertEquals('error:',resultDict['status'][0:6])
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    def test400_090_ShouldReturnRotatedCubeOnb(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=b"
-        expected = ['g','g','g','g','g','g','g','g','g','r','r','y','r','r','y','r','r','y','b','b','b','b','b','b','b','b','b','w','o','o','w','o','o','w','o','o','r','r','r','w','w','w','w','w','w','y','y','y','y','y','y','o','o','o']        
+# ----------------------------------------------------------------------  
+# ----  Happy path tests with Numbers - Assignment 6 --------------
+# ----------------------------------------------------------------------     
+    def test400_010_ShouldReturnRotateFrontFaceOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=f&"+self.facesWithNumbers
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['3','1','3','1','1','1','6','1','1','2','4','5','4','2','3','4','2','6','1','3','5','6','3','5','1','4','1','3','6','2','2','4','6','6','3','4','4','5','2','4','5','3','5','2','6','3','5','5','2','6','6','4','5','2']
+        self.assertEquals(resultDict['cube'],rotatedList)
+        
+    def test400_011_ShouldReturnRotateFrontFaceOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=F&"+self.facesWithNumbers
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['1','1','6','1','1','1','3','1','3','4','4','5','6','2','3','2','2','6','1','3','5','6','3','5','1','4','1','3','6','4','2','4','4','6','3','2','4','5','2','4','5','3','5','5','3','6','2','5','2','6','6','4','5','2']
+        self.assertEquals(resultDict['cube'],rotatedList)
+        
+    def test400_012_ShouldReturnRotateRightFaceOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=r&"+self.facesWithNumbers
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['3','1','4','1','1','6','3','1','2','3','5','5','2','2','4','6','3','5','4','3','5','3','3','5','2','4','1','3','6','6','2','4','2','6','3','5','4','5','1','4','5','1','2','4','6','2','6','1','2','6','6','4','5','1']
+        self.assertEquals(resultDict['cube'],rotatedList)
+        
+    def test400_013_ShouldReturnRotateRightFaceOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=R&"+self.facesWithNumbers
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['3','1','2','1','1','3','3','1','4','5','3','6','4','2','2','5','5','3','2','3','5','6','3','5','4','4','1','3','6','6','2','4','2','6','3','5','4','5','1','4','5','6','2','4','1','2','6','1','2','6','1','4','5','6']
+        self.assertEquals(resultDict['cube'],rotatedList)
 
-    def test400_100_ShouldReturnRotatedCubeOnL(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=L"
-        expected = ['y','g','g','y','g','g','y','g','g','r','r','r','r','r','r','r','r','r','b','b','w','b','b','w','b','b','w','o','o','o','o','o','o','o','o','o','g','w','w','g','w','w','g','w','w','b','y','y','b','y','y','b','y','y']        
+    def test400_014_ShouldReturnRotateLeftFaceOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=l&"+self.facesWithNumbers
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
-    
-    def test400_110_ShouldReturnRotatedCubeOnl(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=l"
-        expected = ['w','g','g','w','g','g','w','g','g','r','r','r','r','r','r','r','r','r','b','b','y','b','b','y','b','b','y','o','o','o','o','o','o','o','o','o','b','w','w','b','w','w','b','w','w','g','y','y','g','y','y','g','y','y']        
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['4','1','1','4','1','1','2','1','6','5','4','5','5','2','3','3','2','6','1','3','4','6','3','2','1','4','2','6','2','3','3','4','6','5','2','6','1','5','2','5','5','3','5','4','4','3','6','4','1','6','6','3','5','2']
+        self.assertEquals(resultDict['cube'], rotatedList)
+     
+    def test400_015_ShouldReturnRotateLeftFaceOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=L&"+self.facesWithNumbers
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['2','1','1','2','1','1','4','1','6','5','4','5','5','2','3','3','2','6','1','3','2','6','3','4','1','4','4','6','2','5','6','4','3','3','2','6','3','5','2','1','5','3','3','4','4','1','6','4','5','6','6','5','5','2']
+        self.assertEquals(resultDict['cube'], rotatedList)
 
-    def test400_120_ShouldReturnRotatedCubeOnT(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=T"
-        expected = ['o','o','o','g','g','g','g','g','g','g','g','g','r','r','r','r','r','r','r','r','r','b','b','b','b','b','b','b','b','b','o','o','o','o','o','o','w','w','w','w','w','w','w','w','w','y','y','y','y','y','y','y','y','y']         
+    def test400_016_ShouldReturnRotateBottomFaceOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=u&"+self.facesWithNumbers
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['3','1','1','1','1','1','6','3','5','5','4','5','5','2','3','3','1','6','1','3','5','6','3','5','3','2','6','3','6','6','2','4','2','1','4','1','4','5','2','4','5','3','2','4','4','4','2','2','5','6','6','2','6','4']
+        self.assertEquals(resultDict['cube'],rotatedList)
+
+    def test400_017_ShouldReturnRotateBottomFaceOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=U&"+self.facesWithNumbers
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['3','1','1','1','1','1','3','2','6','5','4','5','5','2','3','1','4','1','1','3','5','6','3','5','6','3','5','3','6','6','2','4','2','3','1','6','4','5','2','4','5','3','2','4','4','4','6','2','6','6','5','2','2','4']
+        self.assertEquals(resultDict['cube'],rotatedList)
+        
+    def test400_018_ShouldReturnRotateTopFaceOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=t&"+self.facesWithNumbers
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['5','4','5','1','1','1','3','1','6','1','3','5','5','2','3','3','2','6','3','6','6','6','3','5','1','4','1','3','1','1','2','4','2','6','3','5','2','4','4','4','5','5','4','3','2','2','6','4','2','6','6','4','5','2']
+        self.assertEquals(resultDict['cube'],rotatedList)
+
+    def test400_019_ShouldReturnRotateTopFaceOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=T&"+self.facesWithNumbers
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['3','6','6','1','1','1','3','1','6','3','1','1','5','2','3','3','2','6','5','4','5','6','3','5','1','4','1','1','3','5','2','4','2','6','3','5','2','3','4','5','5','4','4','4','2','2','6','4','2','6','6','4','5','2']
+        self.assertEquals(resultDict['cube'],rotatedList)
+
+    def test400_020_ShouldReturnRotateBackFaceOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=B&"+self.facesWithNumbers
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['3','1','1','1','1','1','3','1','6','5','4','4','5','2','5','3','2','2','5','5','1','3','3','4','1','6','1','4','6','6','5','4','2','2','3','5','6','2','3','4','5','3','2','4','4','2','6','4','2','6','6','6','3','5']
+        self.assertEquals(resultDict['cube'],rotatedList)
+
+    def test400_021_ShouldReturnRotateBackFaceOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialNumbersList+"&face=b&"+self.facesWithNumbers
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ['3','1','1','1','1','1','3','1','6','5','4','2','5','2','5','3','2','4','1','6','1','4','3','3','1','5','5','2','6','6','5','4','2','4','3','5','5','3','6','4','5','3','2','4','4','2','6','4','2','6','6','3','2','6']
+        self.assertEquals(resultDict['cube'],rotatedList)
+
     
-    def test400_130_ShouldReturnRotatedCubeOnt(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=t"
-        expected = ['r','r','r','g','g','g','g','g','g','b','b','b','r','r','r','r','r','r','o','o','o','b','b','b','b','b','b','g','g','g','o','o','o','o','o','o','w','w','w','w','w','w','w','w','w','y','y','y','y','y','y','y','y','y']         
+# ----------------------------------------------------------------------  
+# ----  Happy path tests with Colors - Assignment 6 --------------
+# ----------------------------------------------------------------------  
+    def test400_022_ShouldReturnRotateFrontFaceWithColorsOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=f&"+self.facesWithColors
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ["yellow","blue","yellow","orange","orange","green","red","white","blue","red","blue","blue","yellow","blue","green","white","green","green", "white","orange","yellow","orange","red","red","yellow","green","white","blue","blue","blue","yellow","green","yellow","green","red","white","red","white","red","orange","yellow","yellow","orange", "red", "green","green","blue","orange","white","white","red","orange","white","orange"]
+        self.assertEquals(resultDict['cube'],rotatedList)
+        
+    def test400_023_ShouldReturnRotateFrontFaceWithColorsOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=F&"+self.facesWithColors
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ["blue","white","red","green","orange","orange","yellow","blue","yellow","white","blue","blue","yellow","blue","green","blue","green","green", "white","orange","yellow","orange","red","red","yellow","green","white","blue","blue","white","yellow","green","yellow","green","red","red","red","white","red","orange","yellow","yellow","orange", "blue", "green","green","red","orange","white","white","red","orange","white","orange"]
+        self.assertEquals(resultDict['cube'],rotatedList)    
+        
+    def test400_024_ShouldReturnRotateRightFaceWithColorsOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=r&"+self.facesWithColors
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ["yellow","green","white","blue","orange","red","yellow","orange","orange","green","blue","orange","green","blue","blue","green","green","blue", "white","orange","yellow","yellow","red","red","red","green","white","blue","blue","green","yellow","green","red","green","red","orange","red","white","blue","orange","yellow","white","red", "yellow", "red","blue","yellow","yellow","white","white","orange","orange","white","white"]
+        self.assertEquals(resultDict['cube'],rotatedList)
+        
+    def test400_025_ShouldReturnRotateRightFaceWithColorsOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=R&"+self.facesWithColors
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ["yellow","green","red","blue","orange","yellow","yellow","orange","white","blue","green","green","blue","blue","green","orange","blue","green", "orange","orange","yellow","red","red","red","white","green","white","blue","blue","green","yellow","green","red","green","red","orange","red","white","yellow","orange","yellow","orange","red", "yellow", "white","blue","yellow","blue","white","white","white","orange","white","red"]
+        self.assertEquals(resultDict['cube'],rotatedList)
+        
+    def test400_026_ShouldReturnRotateBackFaceWithColorsOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=b&"+self.facesWithColors
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ["yellow","green","blue","blue","orange","white","yellow","orange","red","orange","blue","orange","blue","blue","white","green","green","orange", "yellow","orange","white","green","red","orange","white","red","yellow","red","blue","green","white","green","red","red","red","orange","blue","green","green","orange","yellow","yellow","red", "yellow", "white","blue","yellow","white","white","white","red","blue","yellow","green"]
+        self.assertEquals(resultDict['cube'],rotatedList)
+
+    def test400_027_ShouldReturnRotateBackFaceWithColorsOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=B&"+self.facesWithColors
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ["yellow","green","blue","blue","orange","white","yellow","orange","red","orange","blue","red","blue","blue","white","green","green","red", "yellow","red","white","orange","red","green","white","orange","yellow","orange","blue","green","white","green","red","orange","red","orange","green","yellow","blue","orange","yellow","yellow","red", "yellow", "white","blue","yellow","white","white","white","red","green","green","blue"]
+        self.assertEquals(resultDict['cube'],rotatedList)
+
+    def test400_028_ShouldReturnRotateLeftFaceWithColorsOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=l&"+self.facesWithColors
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ["red","green","blue","orange","orange","white","red","orange","red","orange","blue","blue","blue","blue","green","green","green","green", "white","orange","orange","orange","red","white","yellow","green","blue","green","yellow","blue","red","green","blue","orange","red","green","white","white","red","red","yellow","yellow","yellow", "yellow", "white","yellow","yellow","white","blue","white","red","yellow","white","orange"]
+        self.assertEquals(resultDict['cube'], rotatedList)
+     
+    def test400_029_ShouldReturnRotateLeftFaceWithColorsOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=L&"+self.facesWithColors
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals(resultDict['status'],'rotated')
+        rotatedList = ["blue","green","blue","white","orange","white","orange","orange","red","orange","blue","blue","blue","blue","green","green","green","green", "white","orange","red","orange","red","orange","yellow","green","red","green","red","orange","blue","green","red","blue","yellow","green","yellow","white","red","blue","yellow","yellow","yellow", "yellow", "white","white","yellow","white","red","white","red","yellow","white","orange"]
+        self.assertEquals(resultDict['cube'], rotatedList)
+       
+    def test400_030_ShouldReturnRotateTopandBottomFaceOnClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=t&"+self.facesWithColors
+        fResultString = self.httpGetAndResponse(queryString)
+        fResultDict = self.string2dict(fResultString)
+        self.assertEquals(fResultDict['status'],'rotated')
+        inputList = ','.join(fResultDict['cube'])
+        lQueryString="op=rotate&cube="+inputList+"&face=u&"+self.facesWithColors
+        lResultString = self.httpGetAndResponse(lQueryString)
+        lResultDict = self.string2dict(lResultString)
+        rotatedList = ["orange","blue","blue","blue","orange","white","green","red","orange","white","orange","yellow","blue","blue","green","yellow","orange","red","blue","blue","green","orange","red","red","green","green","green","yellow","green","blue","yellow","green","red","yellow","green","white","red","orange","red","yellow","yellow","white","white", "yellow", "red","orange","white","blue","white","white","yellow","orange","red","white"]
+        self.assertEquals(lResultDict['status'],'rotated')
+        self.assertEquals(lResultDict['cube'], rotatedList)  
     
-    def test400_140_ShouldReturnRotatedCubeOnu(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=u"
-        expected = ['g','g','g','g','g','g','o','o','o','r','r','r','r','r','r','g','g','g','b','b','b','b','b','b','r','r','r','o','o','o','o','o','o','b','b','b','w','w','w','w','w','w','w','w','w','y','y','y','y','y','y','y','y','y']         
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])
+          
+    def test400_031_ShouldReturnRotateTopandBottomFaceOnCounterClockwise(self):
+        queryString="op=rotate&cube="+self.initialColorsList+"&face=T&"+self.facesWithColors
+        fResultString = self.httpGetAndResponse(queryString)
+        fResultDict = self.string2dict(fResultString)
+        self.assertEquals(fResultDict['status'],'rotated')
+        inputList = ','.join(fResultDict['cube'])
+        lQueryString="op=rotate&cube="+inputList+"&face=U&"+self.facesWithColors
+        lResultString = self.httpGetAndResponse(lQueryString)
+        lResultDict = self.string2dict(lResultString)
+        rotatedList = ["blue","blue","green","blue","orange","white","green","green","green","yellow","green","blue","blue","blue","green","yellow","green","white","orange","blue","blue","orange","red","red","green","red","orange","white","orange","yellow","yellow","green","red","yellow","orange","red","red","yellow","white","white","yellow","yellow","red","orange","red","white","red","orange","yellow","white","white","blue","white","orange"]
+        self.assertEquals(lResultDict['status'],'rotated')
+        self.assertEquals(lResultDict['cube'], rotatedList) 
     
-    def test400_150_ShouldReturnRotatedCubeOnU(self):
-        queryString = "op=rotate&f=g&r=r&b=b&l=o&t=w&u=y&cube=g,g,g,g,g,g,g,g,g,r,r,r,r,r,r,r,r,r,b,b,b,b,b,b,b,b,b,o,o,o,o,o,o,o,o,o,w,w,w,w,w,w,w,w,w,y,y,y,y,y,y,y,y,y&face=U"
-        expected = ['g','g','g','g','g','g','r','r','r','r','r','r','r','r','r','b','b','b','b','b','b','b','b','b','o','o','o','o','o','o','o','o','o','g','g','g','w','w','w','w','w','w','w','w','w','y','y','y','y','y','y','y','y','y']         
-        resultString = self.httpGetAndResponse(queryString)
-        resultDict = self.string2dict(resultString)
-        self.assertEquals('rotated',resultDict['status'])
-        self.assertEquals(expected, resultDict['cube'])    
