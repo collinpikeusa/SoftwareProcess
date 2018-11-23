@@ -136,15 +136,14 @@ def scrambleCube(parm):
             if('n' in parm):
                 n = int(parm['n'])
                 return transition(cube, n)
-    else:
-        if('n' in parm):
-            n = int(parm['n'])
-            if(n > 99 or n < 0):
-                return 'error: n is invalid', []
-            for _ in range(0, n):
-                rotation, cube = randomRotation(cube)
-                rotations.append(rotation)
-        randomnessValue = randomness(cube)
+    if('n' in parm):
+        n = int(parm['n'])
+        if(n > 99 or n < 0):
+            return 'error: n is invalid', []
+        for _ in range(0, n):
+            rotation, cube = randomRotation(cube)
+            rotations.append(rotation)
+    randomnessValue = randomness(cube)
     return randomnessValue, rotations
     
 
@@ -164,7 +163,7 @@ def randomness(cube):
     return returnValue
 
 def randomRotation(cube):
-    randomNumber = randint(0, 12)
+    randomNumber = randint(0, 11)
     if(randomNumber == 0):
         rotatedCube = rotateFaceF(cube)
         return 'F', rotatedCube
@@ -175,7 +174,7 @@ def randomRotation(cube):
         rotatedCube = rotateFaceB(cube)
         return 'B', rotatedCube
     elif(randomNumber == 3):
-        rotateFaceb(cube)
+        rotatedCube = rotateFaceb(cube)
         return 'b', rotatedCube
     elif(randomNumber == 4):
         rotatedCube = rotateFaceR(cube)
