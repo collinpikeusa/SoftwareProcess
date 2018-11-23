@@ -1183,4 +1183,11 @@ class DispatchTest(unittest.TestCase):
         rotatedList = ["blue","blue","green","blue","orange","white","green","green","green","yellow","green","blue","blue","blue","green","yellow","green","white","orange","blue","blue","orange","red","red","green","red","orange","white","orange","yellow","yellow","green","red","yellow","orange","red","red","yellow","white","white","yellow","yellow","red","orange","red","white","red","orange","yellow","white","white","blue","white","orange"]
         self.assertEquals(lResultDict['status'],'rotated')
         self.assertEquals(lResultDict['cube'], rotatedList) 
-    
+        
+#--------------------------
+# Project 7 ---------------
+    def test500_001_ShouldReturnSolvedCube(self):
+        queryString="op=scramble"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('scrambled 100',resultDict['status'])
