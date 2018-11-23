@@ -276,9 +276,9 @@ def rotateFaceb(cube):
     rotatedCube[25] = cube[23]
     rotatedCube[26] = cube[20]
     # fix top side
-    rotatedCube[36] = cube[17]
+    rotatedCube[36] = cube[11]
     rotatedCube[37] = cube[14]
-    rotatedCube[38] = cube[11]
+    rotatedCube[38] = cube[17]
     # fix right side
     rotatedCube[11] = cube[53]
     rotatedCube[14] = cube[52]
