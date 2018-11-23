@@ -1186,9 +1186,16 @@ class DispatchTest(unittest.TestCase):
         
 #--------------------------
 # Project 7 ---------------
-    def test500_001_ShouldReturnSolvedCube(self):
+    def test500_001_ShouldReturnSolvedCubeScrambleness(self):
         queryString="op=scramble"
         resultString = self.httpGetAndResponse(queryString)
         resultDict = self.string2dict(resultString)
         self.assertEquals('scrambled 100',resultDict['status'])
         self.assertEquals(resultDict['rotations'], [])
+    
+    def test500_001_ShouldReturnSingleRotationScramble(self):
+        queryString="op=scramble&n=1"
+        resultString = self.httpGetAndResponse(queryString)
+        resultDict = self.string2dict(resultString)
+        self.assertEquals('scrambled 67',resultDict['status'])
+        self.assertEquals(len(resultDict['rotations']), 1)
